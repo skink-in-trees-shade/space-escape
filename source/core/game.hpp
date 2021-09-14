@@ -2,16 +2,18 @@
 #define CORE_GAME_HPP
 
 #include <entityx/entityx.h>
-#include "window.hpp"
 #include "timer.hpp"
+#include "window.hpp"
+#include "world.hpp"
 
 class Game final : private entityx::EntityX {
 public:
-	Game(Window &window, Timer &timer);
+	Game(Window &window, World &world, Timer &timer);
 	void run();
 
 private:
 	Window &window;
+	World &world;
 	Timer &timer;
 };
 
