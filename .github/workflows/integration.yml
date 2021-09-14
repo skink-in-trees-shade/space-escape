@@ -1,0 +1,23 @@
+name: integration
+
+on:
+  push:
+    branches: trunk
+  pull_request:
+    branches: trunk
+
+env:
+  BUILD_TYPE: Debug
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v2
+        with:
+          path: build
+          key: hashFiles('build/CMakeCache.txt')
+      - run: sudo apt-get update && sudo apt-get install xorg-dev libglu1-mesa-dev
+      - run: cmake -B build -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
+      - run: cmake --build build --config ${{ env.BUILD_TYPE }}
