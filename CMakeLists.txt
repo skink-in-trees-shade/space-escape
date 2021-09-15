@@ -11,5 +11,5 @@ include(entityx)
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS source/*.cpp)
 add_executable(${PROJECT_NAME} ${SOURCES})
 
-target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2-static box2d entityx)
+target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2-static SDL2::SDL2main box2d entityx)
 target_include_directories(${PROJECT_NAME} PRIVATE source)

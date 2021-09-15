@@ -10,7 +10,11 @@ void RenderSystem::update(entityx::EntityManager &entities, entityx::EventManage
 	SDL_RenderClear(window.renderer);
 
 	entities.each<Position, Size>([this](entityx::Entity entity, Position &position, Size &size) {
-		SDL_Rect rect = {.x = position.x - size.w / 2, .y = position.y - size.h / 2, .w = size.w, .h = size.h};
+		SDL_Rect rect = SDL_Rect();
+		rect.x = position.x - size.w / 2;
+		rect.y = position.y - size.h / 2;
+		rect.w = size.w;
+		rect.h = size.h;
 		SDL_SetRenderDrawColor(window.renderer, 234, 177, 147, SDL_ALPHA_OPAQUE);
 		SDL_RenderFillRect(window.renderer, &rect);
 	});
