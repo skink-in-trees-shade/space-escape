@@ -17,19 +17,23 @@ jobs:
           - { os: windows-latest, cc: cl }
           - { os: macos-latest, cc: clang }
     env:
-      CC: ${{ matrix.config.cc }}
-      CONFIG: Debug
+      BUILD_TYPE: Debug
     steps:
       - uses: actions/checkout@v2
       - uses: actions/cache@v2
         with:
           path: build
-          key: ${{ matrix.config.os }}-${{ hashFiles('CMakeLists.txt', 'cmake/**') }}
-      - run: sudo apt-get update && sudo apt-get install xorg-dev libglu1-mesa-dev
+          key: ${{ runner.os }}-${{ hashFiles('conanfile.txt', 'CMakeLists.txt') }}
+      - uses: turtlebrowser/get-conan@main
+      - run: sudo apt-get install libegl-dev
         if: matrix.config.os == 'ubuntu-latest'
-      - run: cmake -B build -DCMAKE_BUILD_TYPE=${{ env.CONFIG }}
-      - run: cmake --build build --config ${{ env.CONFIG }}
+      - run: conan install conanfile.txt -if build -s build_type=${{ env.BUILD_TYPE }}
+      - run: conan profile update settings.compiler.libcxx=libstdc++11 default
+        if: matrix.config.cc == 'gcc'
+      - run: cmake -B build -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
+      - run: cmake --build build --config ${{ env.BUILD_TYPE }}
+      - run: tar -cvf space-escape.tar build/bin/space-escape*
       - uses: actions/upload-artifact@v2
         with:
-          name: ${{ matrix.config.os }}
-          path: build/space-escape*
+          name: ${{ runner.os }}-${{ env.BUILD_TYPE }}
+          path: space-escape.tar

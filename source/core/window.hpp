@@ -1,7 +1,7 @@
 #ifndef CORE_WINDOW_HPP
 #define CORE_WINDOW_HPP
 
-#include <SDL.h>
+#include <SDL2/SDL.h>
 
 #define WINDOW_TITLE "Space Escape"
 #define WINDOW_WIDTH 800
