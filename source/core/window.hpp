@@ -4,13 +4,15 @@
 #include <SDL2/SDL.h>
 
 #define WINDOW_TITLE "Space Escape"
-#define WINDOW_WIDTH 800
-#define WINDOW_HEIGHT 600
+#define WINDOW_WIDTH 150
+#define WINDOW_HEIGHT 210
 
 class RenderSystem;
+class SpawnSystem;
 
 class Window final {
 	friend class RenderSystem;
+	friend class SpawnSystem;
 
 public:
 	Window();

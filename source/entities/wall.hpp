@@ -11,6 +11,6 @@ enum Wall {
 	Right
 };
 
-void create_wall(entityx::EntityManager &entities, b2World *world, Wall wall);
+void create_wall(entityx::EntityManager &entities, b2World *world, SDL_Renderer *renderer, Wall wall);
 
 #endif

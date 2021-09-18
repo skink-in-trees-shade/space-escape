@@ -6,7 +6,7 @@
 Game::Game(Window &window, World &world, Timer &timer) : window(window), world(world), timer(timer) {
 	systems.add<PhysicsSystem>(world);
 	systems.add<RenderSystem>(window);
-	systems.add<SpawnSystem>(world);
+	systems.add<SpawnSystem>(world, window);
 	systems.configure();
 }
 
