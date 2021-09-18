@@ -4,8 +4,8 @@
 #include <SDL2/SDL.h>
 
 #define WINDOW_TITLE "Space Escape"
-#define WINDOW_WIDTH 150
-#define WINDOW_HEIGHT 210
+#define WINDOW_WIDTH 112
+#define WINDOW_HEIGHT 152
 
 class RenderSystem;
 class SpawnSystem;

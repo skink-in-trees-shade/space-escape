@@ -10,7 +10,7 @@
 void create_wall(entityx::EntityManager &entities, b2World *world, SDL_Renderer *renderer, Wall wall) {
 	entityx::Entity entity = entities.create();
 
-	constexpr int s = 10;
+	constexpr int s = 6;
 	int x, y, w, h;
 	const char *texname;
 	switch (wall) {
@@ -57,11 +57,7 @@ void create_wall(entityx::EntityManager &entities, b2World *world, SDL_Renderer 
 	b2Fixture *fixture = body->CreateFixture(&fixture_def);
 
 	IMG_Init(IMG_INIT_PNG);
-
-	SDL_Surface *surface = IMG_Load(texname);
-	SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
-	SDL_FreeSurface(surface);
-
+	SDL_Texture *texture = IMG_LoadTexture(renderer, texname);
 	IMG_Quit();
 	entity.assign<Texture>(texture);
 

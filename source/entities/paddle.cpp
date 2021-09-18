@@ -5,35 +5,33 @@
 #include "components/texture.hpp"
 #include "core/window.hpp"
 #include "core/world.hpp"
-#include "ball.hpp"
+#include "paddle.hpp"
 
-void create_ball(entityx::EntityManager &entities, b2World *world, SDL_Renderer *renderer) {
+void create_paddle(entityx::EntityManager &entities, b2World *world, SDL_Renderer *renderer) {
 	entityx::Entity entity = entities.create();
 
-	constexpr int s = 4, x = WINDOW_WIDTH / 2, y = WINDOW_HEIGHT - 24;
+	constexpr int w = 20, h = 6, x = WINDOW_WIDTH / 2, y = WINDOW_HEIGHT - 12;
 
 	b2BodyDef body_def;
 	body_def.type = b2_dynamicBody;
 	body_def.position.Set(x / PTM_RATIO, y / PTM_RATIO);
 	b2Body *body = world->CreateBody(&body_def);
 
-	b2CircleShape shape_def;
-	shape_def.m_radius = s / 2.0 / PTM_RATIO;
+	b2PolygonShape shape_def;
+	shape_def.SetAsBox(w / 2 / PTM_RATIO, h / 2 / PTM_RATIO);
 
 	b2FixtureDef fixture_def;
 	fixture_def.shape = &shape_def;
-	fixture_def.density = 1.0f;
-	fixture_def.friction = 0.0f;
-	fixture_def.restitution = 1.0f;
+	fixture_def.density = 10.0f;
+	fixture_def.friction = 0.4f;
+	fixture_def.restitution = 0.1f;
 	b2Fixture *fixture = body->CreateFixture(&fixture_def);
 
-	body->ApplyLinearImpulse(b2Vec2(0.05, 0.05), body_def.position, true);
-
 	IMG_Init(IMG_INIT_PNG);
-	SDL_Texture *texture = IMG_LoadTexture(renderer, "assets/ball.png");
+	SDL_Texture *texture = IMG_LoadTexture(renderer, "assets/paddle.png");
 	IMG_Quit();
 
-	entity.assign<Size>(s, s);
+	entity.assign<Size>(w, h);
 	entity.assign<Position>(x, y);
 	entity.assign<Body>(body);
 	entity.assign<Texture>(texture);
