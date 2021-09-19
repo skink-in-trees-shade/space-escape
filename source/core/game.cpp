@@ -4,10 +4,12 @@ Game::Game(
 	std::shared_ptr<RenderSystem> render,
 	std::shared_ptr<InputSystem> input,
 	std::shared_ptr<PhysicsSystem> physics,
+	std::shared_ptr<ContactSystem> contact,
 	std::shared_ptr<SpawnSystem> spawn) : is_running(false) {
 	systems.add(render);
 	systems.add(input);
 	systems.add(physics);
+	systems.add(contact);
 	systems.add(spawn);
 	systems.configure();
 }
@@ -36,6 +38,7 @@ void Game::run() {
 			for (int i = 0; i < iter; i++) {
 				systems.update<InputSystem>(dt);
 				systems.update<PhysicsSystem>(dt);
+				systems.update<ContactSystem>(dt);
 				systems.update<SpawnSystem>(dt);
 			}
 			acc -= iter * dt;

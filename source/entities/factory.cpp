@@ -1,5 +1,6 @@
 #include <SDL2/SDL_image.h>
 #include "components/body.hpp"
+#include "components/breakable.hpp"
 #include "components/controlled.hpp"
 #include "components/position.hpp"
 #include "components/size.hpp"
@@ -67,9 +68,11 @@ void EntityFactory::create_brick(entityx::EntityManager &entities, Brick brick) 
 		sy += h * 2;
 	}
 	const char *texname;
+	bool breakable = true;
 	switch (brick) {
 	case Brick::One:
 		texname = "assets/brick_1.png";
+		breakable = false;
 		break;
 	case Brick::Two:
 		texname = "assets/brick_2.png";
@@ -103,6 +106,9 @@ void EntityFactory::create_brick(entityx::EntityManager &entities, Brick brick) 
 	entity.assign<Position>(x, y);
 	entity.assign<Body>(body);
 	entity.assign<Texture>(texture);
+	if (breakable) {
+		entity.assign<Breakable>();
+	}
 }
 
 void EntityFactory::create_paddle(entityx::EntityManager &entities) {
