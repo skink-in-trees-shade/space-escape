@@ -11,7 +11,7 @@ enum Brick {
 	Three,
 };
 
-enum Wall {
+enum class Wall {
 	Top,
 	Bottom,
 	Left,
@@ -30,6 +30,9 @@ public:
 private:
 	b2World *world;
 	SDL_Renderer *renderer;
+	b2Body *floor;
+	b2Body *paddle;
+	void create_paddle_joint();
 };
 
 #endif

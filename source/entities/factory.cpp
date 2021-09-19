@@ -1,12 +1,13 @@
 #include <SDL2/SDL_image.h>
 #include "components/body.hpp"
+#include "components/controlled.hpp"
 #include "components/position.hpp"
 #include "components/size.hpp"
 #include "components/texture.hpp"
 #include "core/config.hpp"
 #include "factory.hpp"
 
-EntityFactory::EntityFactory(b2World *world, SDL_Renderer *renderer) : world(world), renderer(renderer) {
+EntityFactory::EntityFactory(b2World *world, SDL_Renderer *renderer) : world(world), renderer(renderer), floor(nullptr), paddle(nullptr) {
 }
 
 void EntityFactory::create_background(entityx::EntityManager &entities) {
@@ -28,6 +29,7 @@ void EntityFactory::create_ball(entityx::EntityManager &entities) {
 
 	b2BodyDef body_def;
 	body_def.type = b2_dynamicBody;
+	body_def.fixedRotation = true;
 	body_def.position.Set(x / PTM_RATIO, y / PTM_RATIO);
 	b2Body *body = world->CreateBody(&body_def);
 
@@ -79,11 +81,12 @@ void EntityFactory::create_brick(entityx::EntityManager &entities, Brick brick) 
 
 	b2BodyDef body_def;
 	body_def.type = b2_staticBody;
+	body_def.fixedRotation = true;
 	body_def.position.Set(x / PTM_RATIO, y / PTM_RATIO);
 	b2Body *body = world->CreateBody(&body_def);
 
 	b2PolygonShape shape_def;
-	shape_def.SetAsBox(w / 2 / PTM_RATIO, h / 2 / PTM_RATIO);
+	shape_def.SetAsBox(w / 2.0 / PTM_RATIO, h / 2.0 / PTM_RATIO);
 
 	b2FixtureDef fixture_def;
 	fixture_def.shape = &shape_def;
@@ -109,11 +112,15 @@ void EntityFactory::create_paddle(entityx::EntityManager &entities) {
 
 	b2BodyDef body_def;
 	body_def.type = b2_dynamicBody;
+	body_def.fixedRotation = true;
 	body_def.position.Set(x / PTM_RATIO, y / PTM_RATIO);
 	b2Body *body = world->CreateBody(&body_def);
 
+	paddle = body;
+	create_paddle_joint();
+
 	b2PolygonShape shape_def;
-	shape_def.SetAsBox(w / 2 / PTM_RATIO, h / 2 / PTM_RATIO);
+	shape_def.SetAsBox(w / 2.0 / PTM_RATIO, h / 2.0 / PTM_RATIO);
 
 	b2FixtureDef fixture_def;
 	fixture_def.shape = &shape_def;
@@ -130,6 +137,7 @@ void EntityFactory::create_paddle(entityx::EntityManager &entities) {
 	entity.assign<Position>(x, y);
 	entity.assign<Body>(body);
 	entity.assign<Texture>(texture);
+	entity.assign<Controlled>();
 }
 
 void EntityFactory::create_wall(entityx::EntityManager &entities, Wall wall) {
@@ -171,11 +179,17 @@ void EntityFactory::create_wall(entityx::EntityManager &entities, Wall wall) {
 
 	b2BodyDef body_def;
 	body_def.type = b2_staticBody;
+	body_def.fixedRotation = true;
 	body_def.position.Set(x / PTM_RATIO, y / PTM_RATIO);
 	b2Body *body = world->CreateBody(&body_def);
 
+	if (wall == Wall::Bottom) {
+		floor = body;
+		create_paddle_joint();
+	}
+
 	b2PolygonShape shape_def;
-	shape_def.SetAsBox(w / PTM_RATIO / 2, h / PTM_RATIO / 2);
+	shape_def.SetAsBox(w / 2.0 / PTM_RATIO, h / 2.0 / PTM_RATIO);
 
 	b2FixtureDef fixture_def;
 	fixture_def.shape = &shape_def;
@@ -189,4 +203,13 @@ void EntityFactory::create_wall(entityx::EntityManager &entities, Wall wall) {
 	entity.assign<Size>(w, h);
 	entity.assign<Position>(x, y);
 	entity.assign<Body>(body);
+}
+
+void EntityFactory::create_paddle_joint() {
+	if (floor != nullptr && paddle != nullptr) {
+		b2PrismaticJointDef jointDef;
+		jointDef.collideConnected = true;
+		jointDef.Initialize(paddle, floor, paddle->GetWorldCenter(), b2Vec2(1.0f, 0.0f));
+		world->CreateJoint(&jointDef);
+	}
 }

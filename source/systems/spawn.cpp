@@ -12,7 +12,7 @@ void SpawnSystem::update(entityx::EntityManager &entities, entityx::EventManager
 		factory->create_wall(entities, Wall::Right);
 		factory->create_ball(entities);
 		factory->create_paddle(entities);
-		const int bricks_per_line = 10;
+		constexpr int bricks_per_line = 10;
 		for (int i = 0; i < bricks_per_line; i++) {
 			factory->create_brick(entities, Brick::One);
 		}
@@ -22,7 +22,6 @@ void SpawnSystem::update(entityx::EntityManager &entities, entityx::EventManager
 		for (int i = 0; i < bricks_per_line; i++) {
 			factory->create_brick(entities, Brick::Three);
 		}
-
 		entities_spawned = true;
 	}
 }

@@ -1,4 +1,5 @@
 #include <fruit/fruit.h>
+#include "systems/input.hpp"
 #include "systems/physics.hpp"
 #include "systems/render.hpp"
 #include "systems/spawn.hpp"
@@ -9,11 +10,16 @@
 fruit::Component<Game> getGameComponent() {
 	return fruit::createComponent()
 		.registerConstructor<Common()>()
-		.registerProvider([](Common *common) { return new PhysicsSystem(common->world); })
-		.registerProvider([](Common *common) { return new RenderSystem(common->renderer); })
-		.registerProvider([](EntityFactory *factory) { return new SpawnSystem(factory); })
 		.registerProvider([](Common *common) { return new EntityFactory(common->world, common->renderer); })
-		.registerConstructor<Game(std::shared_ptr<RenderSystem>, std::shared_ptr<PhysicsSystem>, std::shared_ptr<SpawnSystem>)>();
+		.registerProvider([](Common *common) { return new RenderSystem(common->renderer); })
+		.registerConstructor<InputSystem()>()
+		.registerProvider([](Common *common) { return new PhysicsSystem(common->world); })
+		.registerProvider([](EntityFactory *factory) { return new SpawnSystem(factory); })
+		.registerConstructor<Game(
+			std::shared_ptr<RenderSystem>,
+			std::shared_ptr<InputSystem>,
+			std::shared_ptr<PhysicsSystem>,
+			std::shared_ptr<SpawnSystem>)>();
 }
 
 int main(int argc, char *argv[]) {
