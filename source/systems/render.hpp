@@ -2,15 +2,15 @@
 #define SYSTEM_RENDER_HPP
 
 #include <entityx/entityx.h>
-#include "core/window.hpp"
+#include <SDL2/SDL.h>
 
 class RenderSystem final : public entityx::System<RenderSystem> {
 public:
-	RenderSystem(Window &window);
+	RenderSystem(SDL_Renderer *renderer);
 	void update(entityx::EntityManager &entities, entityx::EventManager &events, entityx::TimeDelta dt);
 
 private:
-	Window &window;
+	SDL_Renderer *renderer;
 };
 
 #endif

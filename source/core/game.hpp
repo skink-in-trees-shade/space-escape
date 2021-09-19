@@ -2,19 +2,14 @@
 #define CORE_GAME_HPP
 
 #include <entityx/entityx.h>
-#include "timer.hpp"
-#include "window.hpp"
-#include "world.hpp"
+#include "systems/physics.hpp"
+#include "systems/render.hpp"
+#include "systems/spawn.hpp"
 
 class Game final : private entityx::EntityX {
 public:
-	Game(Window &window, World &world, Timer &timer);
+	Game(std::shared_ptr<RenderSystem> render, std::shared_ptr<PhysicsSystem> physics, std::shared_ptr<SpawnSystem> spawn);
 	void run();
-
-private:
-	Window &window;
-	World &world;
-	Timer &timer;
 };
 
 #endif

@@ -2,17 +2,15 @@
 #define SYSTEM_SPAWN_HPP
 
 #include <entityx/entityx.h>
-#include "core/window.hpp"
-#include "core/world.hpp"
+#include "entities/factory.hpp"
 
 class SpawnSystem final : public entityx::System<SpawnSystem> {
 public:
-	SpawnSystem(World &world, Window &window);
+	SpawnSystem(EntityFactory *factory);
 	void update(entityx::EntityManager &entities, entityx::EventManager &events, entityx::TimeDelta dt);
 
 private:
-	World &world;
-	Window &window;
+	EntityFactory *factory;
 	bool entities_spawned;
 };
 
