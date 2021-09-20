@@ -2,6 +2,7 @@
 #include "components/body.hpp"
 #include "components/breakable.hpp"
 #include "components/controlled.hpp"
+#include "components/limited.hpp"
 #include "components/position.hpp"
 #include "components/size.hpp"
 #include "components/texture.hpp"
@@ -26,7 +27,7 @@ void EntityFactory::create_background(entityx::EntityManager &entities) {
 void EntityFactory::create_ball(entityx::EntityManager &entities) {
 	entityx::Entity entity = entities.create();
 
-	constexpr int s = 4, x = WINDOW_WIDTH / 2, y = WINDOW_HEIGHT - 24;
+	constexpr int s = 4, x = WINDOW_WIDTH / 2, y = WINDOW_HEIGHT - 24, v = 160, vx = 64, vy = 64;
 
 	b2BodyDef body_def;
 	body_def.type = b2_dynamicBody;
@@ -44,7 +45,7 @@ void EntityFactory::create_ball(entityx::EntityManager &entities) {
 	fixture_def.restitution = 1.0f;
 	b2Fixture *fixture = body->CreateFixture(&fixture_def);
 
-	body->ApplyLinearImpulse(b2Vec2(0.05, 0.05), body_def.position, true);
+	body->SetLinearVelocity(b2Vec2(v / PTM_RATIO, v / PTM_RATIO));
 
 	IMG_Init(IMG_INIT_PNG);
 	SDL_Texture *texture = IMG_LoadTexture(renderer, "assets/ball.png");
@@ -54,6 +55,7 @@ void EntityFactory::create_ball(entityx::EntityManager &entities) {
 	entity.assign<Position>(x, y);
 	entity.assign<Body>(body);
 	entity.assign<Texture>(texture);
+	entity.assign<Limited>(v, vx, vy);
 }
 
 void EntityFactory::create_brick(entityx::EntityManager &entities, Brick brick) {

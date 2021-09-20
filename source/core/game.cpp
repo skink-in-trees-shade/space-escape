@@ -3,11 +3,13 @@
 Game::Game(
 	std::shared_ptr<RenderSystem> render,
 	std::shared_ptr<InputSystem> input,
+	std::shared_ptr<LimitSystem> limit,
 	std::shared_ptr<PhysicsSystem> physics,
 	std::shared_ptr<ContactSystem> contact,
 	std::shared_ptr<SpawnSystem> spawn) : is_running(false) {
 	systems.add(render);
 	systems.add(input);
+	systems.add(limit);
 	systems.add(physics);
 	systems.add(contact);
 	systems.add(spawn);
@@ -37,6 +39,7 @@ void Game::run() {
 			int iter = acc / dt;
 			for (int i = 0; i < iter; i++) {
 				systems.update<InputSystem>(dt);
+				systems.update<LimitSystem>(dt);
 				systems.update<PhysicsSystem>(dt);
 				systems.update<ContactSystem>(dt);
 				systems.update<SpawnSystem>(dt);
