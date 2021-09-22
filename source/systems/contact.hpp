@@ -1,5 +1,5 @@
-#ifndef SYSTEM_CONTACT_HPP
-#define SYSTEM_CONTACT_HPP
+#ifndef SYSTEMS_CONTACT_HPP
+#define SYSTEMS_CONTACT_HPP
 
 #include <entityx/entityx.h>
 #include <box2d/box2d.h>

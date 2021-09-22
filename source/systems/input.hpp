@@ -1,5 +1,5 @@
-#ifndef SYSTEM_INPUT_HPP
-#define SYSTEM_INPUT_HPP
+#ifndef SYSTEMS_INPUT_HPP
+#define SYSTEMS_INPUT_HPP
 
 #include <entityx/entityx.h>
 

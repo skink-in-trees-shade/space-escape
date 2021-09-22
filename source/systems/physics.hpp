@@ -1,5 +1,5 @@
-#ifndef SYSTEM_PHYSICS_HPP
-#define SYSTEM_PHYSICS_HPP
+#ifndef SYSTEMS_PHYSICS_HPP
+#define SYSTEMS_PHYSICS_HPP
 
 #include <entityx/entityx.h>
 #include <box2d/box2d.h>

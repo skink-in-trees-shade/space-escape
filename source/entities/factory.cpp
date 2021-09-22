@@ -1,11 +1,10 @@
-#include <SDL2/SDL_image.h>
 #include "components/body.hpp"
 #include "components/breakable.hpp"
 #include "components/controlled.hpp"
 #include "components/limited.hpp"
 #include "components/position.hpp"
+#include "components/renderable.hpp"
 #include "components/size.hpp"
-#include "components/texture.hpp"
 #include "core/config.hpp"
 #include "factory.hpp"
 
@@ -17,11 +16,9 @@ void EntityFactory::create_background(entityx::EntityManager &entities) {
 
 	constexpr int x = WINDOW_WIDTH / 2, y = WINDOW_HEIGHT / 2, w = WINDOW_WIDTH, h = WINDOW_HEIGHT;
 
-	SDL_Texture *texture = IMG_LoadTexture(renderer, "assets/background.png");
-
 	entity.assign<Size>(w, h);
 	entity.assign<Position>(x, y);
-	entity.assign<Texture>(texture);
+	entity.assign<Renderable>(Sprite::Background);
 }
 
 void EntityFactory::create_ball(entityx::EntityManager &entities) {
@@ -47,14 +44,10 @@ void EntityFactory::create_ball(entityx::EntityManager &entities) {
 
 	body->SetLinearVelocity(b2Vec2(v / PTM_RATIO, v / PTM_RATIO));
 
-	IMG_Init(IMG_INIT_PNG);
-	SDL_Texture *texture = IMG_LoadTexture(renderer, "assets/ball.png");
-	IMG_Quit();
-
 	entity.assign<Size>(s, s);
 	entity.assign<Position>(x, y);
 	entity.assign<Body>(body);
-	entity.assign<Texture>(texture);
+	entity.assign<Renderable>(Sprite::Ball);
 	entity.assign<Limited>(v, vx, vy);
 }
 
@@ -69,18 +62,18 @@ void EntityFactory::create_brick(entityx::EntityManager &entities, Brick brick) 
 		sx = 6 + w / 2;
 		sy += h * 2;
 	}
-	const char *texname;
+	Sprite sprite;
 	bool breakable = true;
 	switch (brick) {
 	case Brick::One:
-		texname = "assets/brick_1.png";
+		sprite = Sprite::BrickOne;
 		breakable = false;
 		break;
 	case Brick::Two:
-		texname = "assets/brick_2.png";
+		sprite = Sprite::BrickTwo;
 		break;
 	case Brick::Three:
-		texname = "assets/brick_3.png";
+		sprite = Sprite::BrickThree;
 		break;
 	}
 
@@ -100,14 +93,10 @@ void EntityFactory::create_brick(entityx::EntityManager &entities, Brick brick) 
 	fixture_def.restitution = 0.1f;
 	b2Fixture *fixture = body->CreateFixture(&fixture_def);
 
-	IMG_Init(IMG_INIT_PNG);
-	SDL_Texture *texture = IMG_LoadTexture(renderer, texname);
-	IMG_Quit();
-
 	entity.assign<Size>(w, h);
 	entity.assign<Position>(x, y);
 	entity.assign<Body>(body);
-	entity.assign<Texture>(texture);
+	entity.assign<Renderable>(sprite);
 	if (breakable) {
 		entity.assign<Breakable>();
 	}
@@ -137,14 +126,10 @@ void EntityFactory::create_paddle(entityx::EntityManager &entities) {
 	fixture_def.restitution = 0.1f;
 	b2Fixture *fixture = body->CreateFixture(&fixture_def);
 
-	IMG_Init(IMG_INIT_PNG);
-	SDL_Texture *texture = IMG_LoadTexture(renderer, "assets/paddle.png");
-	IMG_Quit();
-
 	entity.assign<Size>(w, h);
 	entity.assign<Position>(x, y);
 	entity.assign<Body>(body);
-	entity.assign<Texture>(texture);
+	entity.assign<Renderable>(Sprite::Paddle);
 	entity.assign<Controlled>();
 }
 
@@ -153,35 +138,35 @@ void EntityFactory::create_wall(entityx::EntityManager &entities, Wall wall) {
 
 	constexpr int s = 6;
 	int x, y, w, h;
-	const char *texname;
+	Sprite sprite;
 	switch (wall) {
 	case Wall::Top:
 		x = WINDOW_WIDTH / 2;
 		y = s / 2;
 		w = WINDOW_WIDTH;
 		h = s;
-		texname = "assets/wall_top.png";
+		sprite = Sprite::WallTop;
 		break;
 	case Wall::Bottom:
 		x = WINDOW_WIDTH / 2;
 		y = WINDOW_HEIGHT - s / 2;
 		w = WINDOW_WIDTH;
 		h = s;
-		texname = "assets/wall_bottom.png";
+		sprite = Sprite::WallBottom;
 		break;
 	case Wall::Left:
 		x = s / 2;
 		y = WINDOW_HEIGHT / 2;
 		w = s;
 		h = WINDOW_HEIGHT;
-		texname = "assets/wall_left.png";
+		sprite = Sprite::WallLeft;
 		break;
 	case Wall::Right:
 		x = WINDOW_WIDTH - s / 2;
 		y = WINDOW_HEIGHT / 2;
 		w = s;
 		h = WINDOW_HEIGHT;
-		texname = "assets/wall_right.png";
+		sprite = Sprite::WallRight;
 		break;
 	}
 
@@ -203,11 +188,7 @@ void EntityFactory::create_wall(entityx::EntityManager &entities, Wall wall) {
 	fixture_def.shape = &shape_def;
 	b2Fixture *fixture = body->CreateFixture(&fixture_def);
 
-	IMG_Init(IMG_INIT_PNG);
-	SDL_Texture *texture = IMG_LoadTexture(renderer, texname);
-	IMG_Quit();
-	entity.assign<Texture>(texture);
-
+	entity.assign<Renderable>(sprite);
 	entity.assign<Size>(w, h);
 	entity.assign<Position>(x, y);
 	entity.assign<Body>(body);

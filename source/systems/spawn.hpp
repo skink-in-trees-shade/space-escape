@@ -1,5 +1,5 @@
-#ifndef SYSTEM_SPAWN_HPP
-#define SYSTEM_SPAWN_HPP
+#ifndef SYSTEMS_SPAWN_HPP
+#define SYSTEMS_SPAWN_HPP
 
 #include <entityx/entityx.h>
 #include "entities/factory.hpp"

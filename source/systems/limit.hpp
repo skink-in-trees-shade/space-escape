@@ -1,5 +1,5 @@
-#ifndef SYSTEM_LIMIT_HPP
-#define SYSTEM_LIMIT_HPP
+#ifndef SYSTEMS_LIMIT_HPP
+#define SYSTEMS_LIMIT_HPP
 
 #include <entityx/entityx.h>
 
