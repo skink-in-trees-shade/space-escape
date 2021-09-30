@@ -9,6 +9,7 @@
 #include "systems/physics.hpp"
 #include "systems/render.hpp"
 #include "systems/spawn.hpp"
+#include "systems/speed.hpp"
 
 class Game final : private entityx::EntityX {
 public:
@@ -19,7 +20,8 @@ public:
 		std::shared_ptr<PhysicsSystem> physics,
 		std::shared_ptr<ContactSystem> contact,
 		std::shared_ptr<SpawnSystem> spawn,
-		std::shared_ptr<BodySystem> body);
+		std::shared_ptr<BodySystem> body,
+		std::shared_ptr<SpeedSystem> speed);
 	void run();
 
 private:

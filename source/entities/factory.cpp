@@ -6,6 +6,7 @@
 #include "components/position.hpp"
 #include "components/renderable.hpp"
 #include "components/size.hpp"
+#include "components/speed.hpp"
 #include "core/config.hpp"
 #include "factory.hpp"
 
@@ -22,6 +23,7 @@ void EntityFactory::create_ball(entityx::EntityManager &entities) {
 	entity.assign<Size>(4, 4);
 	entity.assign<Position>(WINDOW_WIDTH / 2, WINDOW_HEIGHT - 24);
 	entity.assign<Renderable>(Sprite::Ball);
+	entity.assign<Speed>(100, 100);
 	entity.assign<Limited>(160, 64, 64);
 }
 

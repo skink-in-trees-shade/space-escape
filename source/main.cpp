@@ -6,6 +6,7 @@
 #include "systems/physics.hpp"
 #include "systems/render.hpp"
 #include "systems/spawn.hpp"
+#include "systems/speed.hpp"
 #include "entities/factory.hpp"
 #include "core/common.hpp"
 #include "core/game.hpp"
@@ -21,6 +22,7 @@ fruit::Component<Game> getGameComponent() {
 		.registerProvider([](Common *common) { return new ContactSystem(common->world); })
 		.registerProvider([](EntityFactory *factory) { return new SpawnSystem(factory); })
 		.registerProvider([](Common *common) { return new BodySystem(common->world); })
+		.registerConstructor<SpeedSystem()>()
 		.registerConstructor<Game(
 			std::shared_ptr<RenderSystem>,
 			std::shared_ptr<InputSystem>,
@@ -28,7 +30,8 @@ fruit::Component<Game> getGameComponent() {
 			std::shared_ptr<PhysicsSystem>,
 			std::shared_ptr<ContactSystem>,
 			std::shared_ptr<SpawnSystem>,
-			std::shared_ptr<BodySystem>)>();
+			std::shared_ptr<BodySystem>,
+			std::shared_ptr<SpeedSystem>)>();
 }
 
 int main(int argc, char *argv[]) {

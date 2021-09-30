@@ -48,10 +48,6 @@ void BodySystem::update(entityx::EntityManager &entities, entityx::EventManager 
 
 			entity.assign<Physics>(body);
 
-			if (size.w == 4 && size.h == 4) {
-				body->SetLinearVelocity(b2Vec2(100, 100));
-			}
-
 			if (entity.has_component<Controlled>()) {
 				b2BodyDef floor_def;
 				floor_def.type = b2_staticBody;
