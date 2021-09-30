@@ -1,11 +1,11 @@
-#include "components/body.hpp"
+#include "components/physics.hpp"
 #include "components/limited.hpp"
 #include "core/config.hpp"
 #include "limit.hpp"
 
 void LimitSystem::update(entityx::EntityManager &entities, entityx::EventManager &events, entityx::TimeDelta dt) {
-	entities.each<Body, Limited>([](entityx::Entity entity, Body &body, Limited &limited) {
-		b2Vec2 velocity = body.body->GetLinearVelocity();
+	entities.each<Physics, Limited>([](entityx::Entity entity, Physics &physics, Limited &limited) {
+		b2Vec2 velocity = physics.body->GetLinearVelocity();
 		bool adjusted = false;
 		if (velocity.x > -limited.vx / PTM_RATIO && velocity.x < limited.vx / PTM_RATIO) {
 			velocity.x = -limited.vx / PTM_RATIO;
@@ -20,7 +20,7 @@ void LimitSystem::update(entityx::EntityManager &entities, entityx::EventManager
 			adjusted = true;
 		}
 		if (adjusted) {
-			body.body->SetLinearVelocity(velocity);
+			physics.body->SetLinearVelocity(velocity);
 		}
 	});
 }

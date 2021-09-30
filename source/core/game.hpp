@@ -2,6 +2,7 @@
 #define CORE_GAME_HPP
 
 #include <entityx/entityx.h>
+#include "systems/body.hpp"
 #include "systems/contact.hpp"
 #include "systems/limit.hpp"
 #include "systems/input.hpp"
@@ -17,7 +18,8 @@ public:
 		std::shared_ptr<LimitSystem> limit,
 		std::shared_ptr<PhysicsSystem> physics,
 		std::shared_ptr<ContactSystem> contact,
-		std::shared_ptr<SpawnSystem> spawn);
+		std::shared_ptr<SpawnSystem> spawn,
+		std::shared_ptr<BodySystem> body);
 	void run();
 
 private:

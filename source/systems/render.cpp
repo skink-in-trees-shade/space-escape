@@ -8,7 +8,7 @@ RenderSystem::RenderSystem(SDL_Renderer *renderer) : renderer(renderer) {
 }
 
 RenderSystem::~RenderSystem() {
-	for (const auto &texture : textures) {
+	for (const std::pair<Sprite, SDL_Texture *> &texture : textures) {
 		SDL_DestroyTexture(texture.second);
 	}
 }

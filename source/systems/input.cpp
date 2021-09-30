@@ -1,6 +1,6 @@
 #include <SDL2/SDL.h>
-#include "components/body.hpp"
 #include "components/controlled.hpp"
+#include "components/physics.hpp"
 #include "input.hpp"
 
 void InputSystem::update(entityx::EntityManager &entities, entityx::EventManager &events, entityx::TimeDelta dt) {
@@ -15,7 +15,7 @@ void InputSystem::update(entityx::EntityManager &entities, entityx::EventManager
 		vx += dv;
 	}
 
-	entities.each<Controlled, Body>([vx](entityx::Entity entity, Controlled &controlled, Body &body) {
-		body.body->SetLinearVelocity(b2Vec2(vx, 0));
+	entities.each<Controlled, Physics>([vx](entityx::Entity entity, Controlled &controlled, Physics &physics) {
+		physics.body->SetLinearVelocity(b2Vec2(vx, 0));
 	});
 }

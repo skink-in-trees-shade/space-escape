@@ -1,6 +1,6 @@
 #include "spawn.hpp"
 
-SpawnSystem::SpawnSystem(EntityFactory *factory) : factory(factory), entities_spawned(false) {
+SpawnSystem::SpawnSystem(EntityFactory *factory) : factory(factory) {
 }
 
 void SpawnSystem::update(entityx::EntityManager &entities, entityx::EventManager &events, entityx::TimeDelta dt) {

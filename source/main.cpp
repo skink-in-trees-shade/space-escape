@@ -1,4 +1,5 @@
 #include <fruit/fruit.h>
+#include "systems/body.hpp"
 #include "systems/contact.hpp"
 #include "systems/limit.hpp"
 #include "systems/input.hpp"
@@ -12,20 +13,22 @@
 fruit::Component<Game> getGameComponent() {
 	return fruit::createComponent()
 		.registerConstructor<Common()>()
-		.registerProvider([](Common *common) { return new EntityFactory(common->world, common->renderer); })
+		.registerConstructor<EntityFactory()>()
 		.registerProvider([](Common *common) { return new RenderSystem(common->renderer); })
 		.registerConstructor<InputSystem()>()
 		.registerConstructor<LimitSystem()>()
 		.registerProvider([](Common *common) { return new PhysicsSystem(common->world); })
 		.registerProvider([](Common *common) { return new ContactSystem(common->world); })
 		.registerProvider([](EntityFactory *factory) { return new SpawnSystem(factory); })
+		.registerProvider([](Common *common) { return new BodySystem(common->world); })
 		.registerConstructor<Game(
 			std::shared_ptr<RenderSystem>,
 			std::shared_ptr<InputSystem>,
 			std::shared_ptr<LimitSystem>,
 			std::shared_ptr<PhysicsSystem>,
 			std::shared_ptr<ContactSystem>,
-			std::shared_ptr<SpawnSystem>)>();
+			std::shared_ptr<SpawnSystem>,
+			std::shared_ptr<BodySystem>)>();
 }
 
 int main(int argc, char *argv[]) {

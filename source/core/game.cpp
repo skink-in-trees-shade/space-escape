@@ -6,13 +6,15 @@ Game::Game(
 	std::shared_ptr<LimitSystem> limit,
 	std::shared_ptr<PhysicsSystem> physics,
 	std::shared_ptr<ContactSystem> contact,
-	std::shared_ptr<SpawnSystem> spawn) : is_running(false) {
+	std::shared_ptr<SpawnSystem> spawn,
+	std::shared_ptr<BodySystem> body) {
 	systems.add(render);
 	systems.add(input);
 	systems.add(limit);
 	systems.add(physics);
 	systems.add(contact);
 	systems.add(spawn);
+	systems.add(body);
 	systems.configure();
 }
 
@@ -43,6 +45,7 @@ void Game::run() {
 				systems.update<PhysicsSystem>(dt);
 				systems.update<ContactSystem>(dt);
 				systems.update<SpawnSystem>(dt);
+				systems.update<BodySystem>(dt);
 			}
 			acc -= iter * dt;
 
