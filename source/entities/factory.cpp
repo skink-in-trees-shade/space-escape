@@ -1,8 +1,10 @@
 #include <map>
+#include <sstream>
 #include "components/breakable.hpp"
 #include "components/controlled.hpp"
 #include "components/limited.hpp"
 #include "components/material.hpp"
+#include "components/message.hpp"
 #include "components/position.hpp"
 #include "components/renderable.hpp"
 #include "components/size.hpp"
@@ -103,4 +105,12 @@ void EntityFactory::create_wall(entityx::EntityManager &entities, Wall wall) {
 	entity.assign<Size>(w, h);
 	entity.assign<Position>(x, y);
 	entity.assign<Renderable>(sprite);
+}
+
+void EntityFactory::create_round_message(entityx::EntityManager &entities, int round) {
+	entityx::Entity entity = entities.create();
+	entity.assign<Position>(WINDOW_WIDTH / 2 - 28, WINDOW_HEIGHT - 64);
+	std::ostringstream text;
+	text << "ROUND " << round;
+	entity.assign<Message>(text.str());
 }

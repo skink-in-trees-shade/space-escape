@@ -22,6 +22,9 @@ void SpawnSystem::update(entityx::EntityManager &entities, entityx::EventManager
 		for (int i = 0; i < bricks_per_line; i++) {
 			factory->create_brick(entities, Brick::Three);
 		}
+
+		factory->create_round_message(entities, 1);
+
 		entities_spawned = true;
 	}
 }

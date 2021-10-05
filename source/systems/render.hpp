@@ -14,6 +14,7 @@ public:
 
 private:
 	SDL_Renderer *renderer;
+	SDL_Texture *font;
 	std::map<Sprite, SDL_Texture *> textures = {};
 	SDL_Texture *get_texture(Sprite sprite);
 };

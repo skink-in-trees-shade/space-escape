@@ -23,6 +23,7 @@ public:
 	void create_brick(entityx::EntityManager &entities, Brick brick);
 	void create_paddle(entityx::EntityManager &entities);
 	void create_wall(entityx::EntityManager &entities, Wall wall);
+	void create_round_message(entityx::EntityManager &entities, int round);
 };
 
 #endif
