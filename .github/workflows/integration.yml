@@ -13,11 +13,13 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - { os: ubuntu-latest, cc: gcc }
-          - { os: windows-latest, cc: cl }
-          - { os: macos-latest, cc: clang }
+          - { os: ubuntu-18.04, cc: gcc }
+          - { os: windows-2019, cc: cl }
+          - { os: macos-10.15, cc: clang }
     env:
       BUILD_TYPE: Debug
+      CONAN_V2_MODE: 1
+      CONAN_SYSREQUIRES_MODE: enabled
     steps:
       - uses: actions/checkout@v2
       - uses: actions/cache@v2
@@ -25,12 +27,6 @@ jobs:
           path: build
           key: ${{ runner.os }}-${{ hashFiles('conanfile.txt', 'CMakeLists.txt') }}
       - uses: turtlebrowser/get-conan@main
-      - run: sudo apt-get install libegl-dev
-        if: matrix.config.os == 'ubuntu-latest'
-      - run: conan profile new default --detect && conan profile update settings.compiler.libcxx=libstdc++11 default
-        if: matrix.config.cc == 'gcc'
-      - run: conan remote add bincrafters https://bincrafters.jfrog.io/artifactory/api/conan/public-conan
-      - run: conan config set general.revisions_enabled=1
       - run: conan install . -if build -s build_type=${{ env.BUILD_TYPE }}
       - run: cmake -B build -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
       - run: cmake --build build --config ${{ env.BUILD_TYPE }}
