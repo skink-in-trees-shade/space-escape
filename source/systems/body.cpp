@@ -52,7 +52,7 @@ void BodySystem::update(entityx::EntityManager &entities, entityx::EventManager 
 				b2BodyDef floor_def;
 				floor_def.type = b2_staticBody;
 				body_def.fixedRotation = true;
-				body_def.position.Set(WINDOW_WIDTH / 2.0f / PTM_RATIO, WINDOW_HEIGHT + 4 / 2 / PTM_RATIO);
+				body_def.position.Set(SCREEN_WIDTH / 2.0f / PTM_RATIO, SCREEN_HEIGHT + 4 / 2 / PTM_RATIO);
 				b2Body *floor = world->CreateBody(&floor_def);
 
 				b2PrismaticJointDef joint_def;

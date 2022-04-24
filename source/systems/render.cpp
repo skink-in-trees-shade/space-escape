@@ -3,6 +3,7 @@
 #include "components/position.hpp"
 #include "components/renderable.hpp"
 #include "components/size.hpp"
+#include "core/config.hpp"
 #include "render.hpp"
 
 RenderSystem::RenderSystem(SDL_Renderer *renderer) : renderer(renderer), font(nullptr) {
@@ -33,24 +34,24 @@ void RenderSystem::update(entityx::EntityManager &entities, entityx::EventManage
 			font = IMG_LoadTexture(renderer, "assets/font.png");
 		}
 
-		static char font_map[8][8] = {
+		static char font_map[GLYPH_WIDTH][GLYPH_HEIGHT] = {
 			{'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'},
 			{'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P'},
 			{'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X'},
 			{'Y', 'Z', '0', '1', '2', '3', '4', '5'},
 			{'6', '7', '8', '9', ' '}};
 		for (int i = 0; i < message.text.size(); i++) {
-			SDL_Rect src = {-1, -1, 8, 8};
-			for (int y = 0; y < 8 && src.y < 0; y++) {
-				for (int x = 0; x < 8 && src.x < 0; x++) {
+			SDL_Rect src = {-1, -1, GLYPH_WIDTH, GLYPH_HEIGHT};
+			for (int y = 0; y < GLYPH_HEIGHT && src.y < 0; y++) {
+				for (int x = 0; x < GLYPH_WIDTH && src.x < 0; x++) {
 					if (font_map[y][x] == message.text[i]) {
-						src.x = x * 8;
-						src.y = y * 8;
+						src.x = x * GLYPH_WIDTH;
+						src.y = y * GLYPH_HEIGHT;
 					}
 				}
 			}
 			if (src.x >= 0 && src.y >= 0) {
-				SDL_Rect dst = {position.x + i * 8, position.y, 8, 8};
+				SDL_Rect dst = {position.x + i * GLYPH_WIDTH, position.y, GLYPH_WIDTH, GLYPH_HEIGHT};
 				SDL_RenderCopy(renderer, font, &src, &dst);
 			}
 		}

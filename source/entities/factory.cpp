@@ -14,16 +14,16 @@
 
 void EntityFactory::create_background(entityx::EntityManager &entities) {
 	entityx::Entity entity = entities.create();
-	entity.assign<Size>(WINDOW_WIDTH, WINDOW_HEIGHT);
-	entity.assign<Position>(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
+	entity.assign<Size>(SCREEN_WIDTH, SCREEN_HEIGHT);
+	entity.assign<Position>(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
 	entity.assign<Renderable>(Sprite::Background);
 }
 
 void EntityFactory::create_ball(entityx::EntityManager &entities) {
 	entityx::Entity entity = entities.create();
 	entity.assign<Material>(Body::Dynamic, Shape::Circle, 1.0f, 0.0f, 1.0f);
-	entity.assign<Size>(4, 4);
-	entity.assign<Position>(WINDOW_WIDTH / 2, WINDOW_HEIGHT - 24);
+	entity.assign<Size>(BALL_WIDTH, BALL_HEIGHT);
+	entity.assign<Position>(SCREEN_WIDTH / 2, SCREEN_HEIGHT - BALL_BOTTOM_OFFSET);
 	entity.assign<Renderable>(Sprite::Ball);
 	entity.assign<Speed>(100, 100);
 	entity.assign<Limited>(160, 64, 64);
@@ -36,18 +36,17 @@ void EntityFactory::create_brick(entityx::EntityManager &entities, Brick brick) 
 		{Brick::Three, Sprite::BrickThree},
 	};
 
-	constexpr int w = 10, h = 6;
-	static int sx = 6 + w / 2, sy = h * 6;
+	static int sx = WALL_THICKNESS + (BRICK_WIDTH / 2), sy = BRICK_TOP_OFFSET;
 	int x = sx, y = sy;
-	sx += w;
-	if (sx >= WINDOW_WIDTH - 6) {
-		sx = 6 + w / 2;
-		sy += h * 2;
+	sx += BRICK_WIDTH;
+	if (sx >= SCREEN_WIDTH - WALL_THICKNESS) {
+		sx = WALL_THICKNESS + (BRICK_WIDTH / 2);
+		sy += BRICK_HEIGHT * 2;
 	}
 
 	entityx::Entity entity = entities.create();
 	entity.assign<Material>(Body::Static, Shape::Polygon, 10.0f, 0.0f, 0.1f);
-	entity.assign<Size>(10, 6);
+	entity.assign<Size>(BRICK_WIDTH, BRICK_HEIGHT);
 	entity.assign<Position>(x, y);
 	entity.assign<Renderable>(sprites[brick]);
 	if (brick != Brick::One) {
@@ -58,8 +57,8 @@ void EntityFactory::create_brick(entityx::EntityManager &entities, Brick brick) 
 void EntityFactory::create_paddle(entityx::EntityManager &entities) {
 	entityx::Entity entity = entities.create();
 	entity.assign<Material>(Body::Dynamic, Shape::Polygon, 10.0f, 0.4f, 0.1f);
-	entity.assign<Size>(20, 6);
-	entity.assign<Position>(WINDOW_WIDTH / 2, WINDOW_HEIGHT - 12);
+	entity.assign<Size>(PADDLE_WIDTH, PADDLE_HEIGHT);
+	entity.assign<Position>(SCREEN_WIDTH / 2, SCREEN_HEIGHT - PADDLE_BOTTOM_OFFSET);
 	entity.assign<Renderable>(Sprite::Paddle);
 	entity.assign<Controlled>();
 }
@@ -67,36 +66,35 @@ void EntityFactory::create_paddle(entityx::EntityManager &entities) {
 void EntityFactory::create_wall(entityx::EntityManager &entities, Wall wall) {
 	entityx::Entity entity = entities.create();
 
-	constexpr int s = 6;
 	int x, y, w, h;
 	Sprite sprite;
 	switch (wall) {
 	case Wall::Top:
-		x = WINDOW_WIDTH / 2;
-		y = s / 2;
-		w = WINDOW_WIDTH;
-		h = s;
+		x = SCREEN_WIDTH / 2;
+		y = WALL_THICKNESS / 2;
+		w = SCREEN_WIDTH;
+		h = WALL_THICKNESS;
 		sprite = Sprite::WallTop;
 		break;
 	case Wall::Bottom:
-		x = WINDOW_WIDTH / 2;
-		y = WINDOW_HEIGHT - s / 2;
-		w = WINDOW_WIDTH;
-		h = s;
+		x = SCREEN_WIDTH / 2;
+		y = SCREEN_HEIGHT - WALL_THICKNESS / 2;
+		w = SCREEN_WIDTH;
+		h = WALL_THICKNESS;
 		sprite = Sprite::WallBottom;
 		break;
 	case Wall::Left:
-		x = s / 2;
-		y = WINDOW_HEIGHT / 2;
-		w = s;
-		h = WINDOW_HEIGHT;
+		x = WALL_THICKNESS / 2;
+		y = SCREEN_HEIGHT / 2;
+		w = WALL_THICKNESS;
+		h = SCREEN_HEIGHT;
 		sprite = Sprite::WallLeft;
 		break;
 	case Wall::Right:
-		x = WINDOW_WIDTH - s / 2;
-		y = WINDOW_HEIGHT / 2;
-		w = s;
-		h = WINDOW_HEIGHT;
+		x = SCREEN_WIDTH - WALL_THICKNESS / 2;
+		y = SCREEN_HEIGHT / 2;
+		w = WALL_THICKNESS;
+		h = SCREEN_HEIGHT;
 		sprite = Sprite::WallRight;
 		break;
 	}
@@ -109,8 +107,8 @@ void EntityFactory::create_wall(entityx::EntityManager &entities, Wall wall) {
 
 void EntityFactory::create_round_message(entityx::EntityManager &entities, int round) {
 	entityx::Entity entity = entities.create();
-	entity.assign<Position>(WINDOW_WIDTH / 2 - 28, WINDOW_HEIGHT - 64);
 	std::ostringstream text;
 	text << "ROUND " << round;
 	entity.assign<Message>(text.str());
+	entity.assign<Position>(SCREEN_WIDTH / 2 - (text.str().size() * GLYPH_WIDTH / 2), SCREEN_HEIGHT - ROUND_MESSAGE_BOTTOM_OFFSET);
 }
