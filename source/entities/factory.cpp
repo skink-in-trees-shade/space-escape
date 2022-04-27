@@ -1,5 +1,6 @@
 #include <map>
 #include "components/breakable.hpp"
+#include "components/color.hpp"
 #include "components/controlled.hpp"
 #include "components/limited.hpp"
 #include "components/material.hpp"
@@ -24,15 +25,22 @@ void EntityFactory::create_ball(entityx::EntityManager &entities) {
 	entity.assign<Size>(BALL_WIDTH, BALL_HEIGHT);
 	entity.assign<Position>(SCREEN_WIDTH / 2, SCREEN_HEIGHT - (WALL_THICKNESS * 2) - PADDLE_HEIGHT);
 	entity.assign<Renderable>(Sprite::Ball);
+	entity.assign<Color>(COLOR_MAIN);
 	entity.assign<Speed>(100, 100);
 	entity.assign<Limited>(160, 64, 64);
 }
 
 void EntityFactory::create_brick(entityx::EntityManager &entities, Brick brick) {
-	static std::map<Brick, Sprite> sprites = {
-		{Brick::One, Sprite::BrickOne},
-		{Brick::Two, Sprite::BrickTwo},
-		{Brick::Three, Sprite::BrickThree},
+	struct BrickData {
+		Sprite sprite;
+		int r;
+		int g;
+		int b;
+	};
+	static std::map<Brick, BrickData> sprites = {
+		{Brick::One, {Sprite::StrongBrick, COLOR_ACTIVE_1}},
+		{Brick::Two, {Sprite::Brick, COLOR_ACTIVE_2}},
+		{Brick::Three, {Sprite::Brick, COLOR_ACTIVE_3}},
 	};
 
 	static int sx = WALL_THICKNESS + (BRICK_WIDTH / 2), sy = WALL_THICKNESS + BRICK_HEIGHT * 5;
@@ -47,7 +55,8 @@ void EntityFactory::create_brick(entityx::EntityManager &entities, Brick brick) 
 	entity.assign<Material>(Body::Static, Shape::Polygon, 10.0f, 0.0f, 0.1f);
 	entity.assign<Size>(BRICK_WIDTH, BRICK_HEIGHT);
 	entity.assign<Position>(x, y);
-	entity.assign<Renderable>(sprites[brick]);
+	entity.assign<Renderable>(sprites[brick].sprite);
+	entity.assign<Color>(sprites[brick].r, sprites[brick].g, sprites[brick].b);
 	if (brick != Brick::One) {
 		entity.assign<Breakable>();
 	}
@@ -59,6 +68,7 @@ void EntityFactory::create_paddle(entityx::EntityManager &entities) {
 	entity.assign<Size>(PADDLE_WIDTH, PADDLE_HEIGHT);
 	entity.assign<Position>(SCREEN_WIDTH / 2, SCREEN_HEIGHT - (WALL_THICKNESS * 2));
 	entity.assign<Renderable>(Sprite::Paddle);
+	entity.assign<Color>(COLOR_MAIN);
 	entity.assign<Controlled>();
 }
 
@@ -102,6 +112,7 @@ void EntityFactory::create_wall(entityx::EntityManager &entities, Wall wall) {
 	entity.assign<Size>(w, h);
 	entity.assign<Position>(x, y);
 	entity.assign<Renderable>(sprite);
+	entity.assign<Color>(COLOR_MAIN);
 }
 
 void EntityFactory::create_round_title_message(entityx::EntityManager &entities) {
@@ -109,6 +120,7 @@ void EntityFactory::create_round_title_message(entityx::EntityManager &entities)
 	std::string text = "ROUND";
 	entity.assign<Message>(text);
 	entity.assign<Position>(SCREEN_WIDTH + GLYPH_WIDTH, GLYPH_HEIGHT);
+	entity.assign<Color>(COLOR_MAIN);
 }
 
 void EntityFactory::create_round_number_message(entityx::EntityManager &entities, int round) {

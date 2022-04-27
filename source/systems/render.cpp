@@ -1,4 +1,5 @@
 #include <SDL2/SDL_image.h>
+#include "components/color.hpp"
 #include "components/message.hpp"
 #include "components/position.hpp"
 #include "components/renderable.hpp"
@@ -21,12 +22,22 @@ void RenderSystem::update(entityx::EntityManager &entities, entityx::EventManage
 	SDL_RenderClear(renderer);
 
 	entities.each<Position, Size, Renderable>([this](entityx::Entity entity, Position &position, Size &size, Renderable &renderable) {
+		SDL_Texture *texture = get_texture(renderable.sprite);
+
+		entityx::ComponentHandle<Color> colorHandle = entity.component<Color>();
+		if (colorHandle) {
+			Color *color = colorHandle.get();
+			SDL_SetTextureColorMod(texture, color->r, color->g, color->b);
+		} else {
+			SDL_SetTextureColorMod(texture, 255, 255, 255);
+		}
+
 		SDL_Rect rect = SDL_Rect();
 		rect.x = position.x - size.w / 2;
 		rect.y = position.y - size.h / 2;
 		rect.w = size.w;
 		rect.h = size.h;
-		SDL_RenderCopy(renderer, get_texture(renderable.sprite), nullptr, &rect);
+		SDL_RenderCopy(renderer, texture, nullptr, &rect);
 	});
 
 	entities.each<Position, Message>([this](entityx::Entity entity, Position &position, Message &message) {
@@ -51,6 +62,14 @@ void RenderSystem::update(entityx::EntityManager &entities, entityx::EventManage
 				}
 			}
 			if (src.x >= 0 && src.y >= 0) {
+				entityx::ComponentHandle<Color> colorHandle = entity.component<Color>();
+				if (colorHandle) {
+					Color *color = colorHandle.get();
+					SDL_SetTextureColorMod(font, color->r, color->g, color->b);
+				} else {
+					SDL_SetTextureColorMod(font, 255, 255, 255);
+				}
+
 				SDL_Rect dst = {position.x + i * GLYPH_WIDTH, position.y, GLYPH_WIDTH, GLYPH_HEIGHT};
 				SDL_RenderCopy(renderer, font, &src, &dst);
 			}
@@ -68,9 +87,8 @@ SDL_Texture *RenderSystem::get_texture(Sprite sprite) {
 	static std::map<Sprite, const char *> assets = {
 		{Sprite::Background, "assets/background.png"},
 		{Sprite::Ball, "assets/ball.png"},
-		{Sprite::BrickOne, "assets/brick_1.png"},
-		{Sprite::BrickTwo, "assets/brick_2.png"},
-		{Sprite::BrickThree, "assets/brick_3.png"},
+		{Sprite::Brick, "assets/brick.png"},
+		{Sprite::StrongBrick, "assets/strong_brick.png"},
 		{Sprite::Paddle, "assets/paddle.png"},
 		{Sprite::WallLeft, "assets/wall_left.png"},
 		{Sprite::WallRight, "assets/wall_right.png"},

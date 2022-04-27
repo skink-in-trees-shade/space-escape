@@ -3,7 +3,7 @@
 
 #include <entityx/entityx.h>
 
-enum Brick {
+enum class Brick {
 	One,
 	Two,
 	Three,

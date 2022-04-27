@@ -4,9 +4,8 @@
 enum class Sprite {
 	Background,
 	Ball,
-	BrickOne,
-	BrickTwo,
-	BrickThree,
+	Brick,
+	StrongBrick,
 	Paddle,
 	WallLeft,
 	WallRight,
