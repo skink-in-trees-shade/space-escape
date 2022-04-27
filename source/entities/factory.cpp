@@ -1,5 +1,4 @@
 #include <map>
-#include <sstream>
 #include "components/breakable.hpp"
 #include "components/controlled.hpp"
 #include "components/limited.hpp"
@@ -23,7 +22,7 @@ void EntityFactory::create_ball(entityx::EntityManager &entities) {
 	entityx::Entity entity = entities.create();
 	entity.assign<Material>(Body::Dynamic, Shape::Circle, 1.0f, 0.0f, 1.0f);
 	entity.assign<Size>(BALL_WIDTH, BALL_HEIGHT);
-	entity.assign<Position>(SCREEN_WIDTH / 2, SCREEN_HEIGHT - BALL_BOTTOM_OFFSET);
+	entity.assign<Position>(SCREEN_WIDTH / 2, SCREEN_HEIGHT - (WALL_THICKNESS * 2) - PADDLE_HEIGHT);
 	entity.assign<Renderable>(Sprite::Ball);
 	entity.assign<Speed>(100, 100);
 	entity.assign<Limited>(160, 64, 64);
@@ -36,7 +35,7 @@ void EntityFactory::create_brick(entityx::EntityManager &entities, Brick brick) 
 		{Brick::Three, Sprite::BrickThree},
 	};
 
-	static int sx = WALL_THICKNESS + (BRICK_WIDTH / 2), sy = BRICK_TOP_OFFSET;
+	static int sx = WALL_THICKNESS + (BRICK_WIDTH / 2), sy = WALL_THICKNESS + BRICK_HEIGHT * 5;
 	int x = sx, y = sy;
 	sx += BRICK_WIDTH;
 	if (sx >= SCREEN_WIDTH - WALL_THICKNESS) {
@@ -58,7 +57,7 @@ void EntityFactory::create_paddle(entityx::EntityManager &entities) {
 	entityx::Entity entity = entities.create();
 	entity.assign<Material>(Body::Dynamic, Shape::Polygon, 10.0f, 0.4f, 0.1f);
 	entity.assign<Size>(PADDLE_WIDTH, PADDLE_HEIGHT);
-	entity.assign<Position>(SCREEN_WIDTH / 2, SCREEN_HEIGHT - PADDLE_BOTTOM_OFFSET);
+	entity.assign<Position>(SCREEN_WIDTH / 2, SCREEN_HEIGHT - (WALL_THICKNESS * 2));
 	entity.assign<Renderable>(Sprite::Paddle);
 	entity.assign<Controlled>();
 }
@@ -78,7 +77,7 @@ void EntityFactory::create_wall(entityx::EntityManager &entities, Wall wall) {
 		break;
 	case Wall::Bottom:
 		x = SCREEN_WIDTH / 2;
-		y = SCREEN_HEIGHT - WALL_THICKNESS / 2;
+		y = SCREEN_HEIGHT - (WALL_THICKNESS / 2);
 		w = SCREEN_WIDTH;
 		h = WALL_THICKNESS;
 		sprite = Sprite::WallBottom;
@@ -91,7 +90,7 @@ void EntityFactory::create_wall(entityx::EntityManager &entities, Wall wall) {
 		sprite = Sprite::WallLeft;
 		break;
 	case Wall::Right:
-		x = SCREEN_WIDTH - WALL_THICKNESS / 2;
+		x = SCREEN_WIDTH - (WALL_THICKNESS / 2);
 		y = SCREEN_HEIGHT / 2;
 		w = WALL_THICKNESS;
 		h = SCREEN_HEIGHT;
@@ -105,10 +104,16 @@ void EntityFactory::create_wall(entityx::EntityManager &entities, Wall wall) {
 	entity.assign<Renderable>(sprite);
 }
 
-void EntityFactory::create_round_message(entityx::EntityManager &entities, int round) {
+void EntityFactory::create_round_title_message(entityx::EntityManager &entities) {
 	entityx::Entity entity = entities.create();
-	std::ostringstream text;
-	text << "ROUND " << round;
-	entity.assign<Message>(text.str());
-	entity.assign<Position>(SCREEN_WIDTH / 2 - (text.str().size() * GLYPH_WIDTH / 2), SCREEN_HEIGHT - ROUND_MESSAGE_BOTTOM_OFFSET);
+	std::string text = "ROUND";
+	entity.assign<Message>(text);
+	entity.assign<Position>(SCREEN_WIDTH + GLYPH_WIDTH, GLYPH_HEIGHT);
+}
+
+void EntityFactory::create_round_number_message(entityx::EntityManager &entities, int round) {
+	entityx::Entity entity = entities.create();
+	std::string text = std::to_string(round);
+	entity.assign<Message>(text);
+	entity.assign<Position>(SCREEN_WIDTH + GLYPH_WIDTH, GLYPH_HEIGHT * 2);
 }
