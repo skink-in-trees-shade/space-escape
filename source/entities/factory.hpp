@@ -25,6 +25,8 @@ public:
 	void create_wall(entityx::EntityManager &entities, Wall wall);
 	void create_round_title_message(entityx::EntityManager &entities);
 	void create_round_number_message(entityx::EntityManager &entities, int round);
+	void create_score_title_message(entityx::EntityManager &entities);
+	void create_score_points_message(entityx::EntityManager &entities);
 };
 
 #endif

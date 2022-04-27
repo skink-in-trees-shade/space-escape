@@ -24,6 +24,9 @@ void SpawnSystem::update(entityx::EntityManager &entities, entityx::EventManager
 			factory->create_brick(entities, Brick::Three);
 		}
 
+		factory->create_score_title_message(entities);
+		factory->create_score_points_message(entities);
+
 		factory->create_round_title_message(entities);
 		factory->create_round_number_message(entities, 1);
 
