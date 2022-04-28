@@ -13,7 +13,7 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - { os: ubuntu-18.04, cc: gcc }
+          - { os: ubuntu-20.04, cc: gcc }
           - { os: windows-2019, cc: cl }
           - { os: macos-10.15, cc: clang }
     env:
@@ -25,7 +25,7 @@ jobs:
       - uses: actions/cache@v2
         with:
           path: build
-          key: ${{ runner.os }}-${{ hashFiles('conanfile.txt', 'CMakeLists.txt') }}
+          key: ${{ matrix.config.os }}-${{ hashFiles('conanfile.txt', 'CMakeLists.txt') }}
       - uses: turtlebrowser/get-conan@main
       - run: conan install . -if build -s build_type=${{ env.BUILD_TYPE }}
       - run: cmake -B build -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
@@ -33,5 +33,5 @@ jobs:
       - run: tar -cvf space-escape.tar -C build/bin .
       - uses: actions/upload-artifact@v2
         with:
-          name: ${{ runner.os }}-${{ env.BUILD_TYPE }}
+          name: ${{ matrix.config.os }}-${{ env.BUILD_TYPE }}
           path: space-escape.tar
