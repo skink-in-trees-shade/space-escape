@@ -32,7 +32,7 @@ void EntityFactory::create_ball(entityx::EntityManager &entities) {
 	entity.assign<Limited>(160, 64, 64);
 }
 
-void EntityFactory::create_brick(entityx::EntityManager &entities, Brick brick) {
+void EntityFactory::create_brick(entityx::EntityManager &entities, Brick brick, int x, int y) {
 	struct BrickData {
 		Sprite sprite;
 		int r;
@@ -46,18 +46,10 @@ void EntityFactory::create_brick(entityx::EntityManager &entities, Brick brick) 
 		{Brick::Three, {Sprite::Brick, COLOR_ACTIVE_3, 10}},
 	};
 
-	static int sx = WALL_THICKNESS + (BRICK_WIDTH / 2), sy = WALL_THICKNESS + BRICK_HEIGHT * 5;
-	int x = sx, y = sy;
-	sx += BRICK_WIDTH;
-	if (sx >= SCREEN_WIDTH - WALL_THICKNESS) {
-		sx = WALL_THICKNESS + (BRICK_WIDTH / 2);
-		sy += BRICK_HEIGHT * 2;
-	}
-
 	entityx::Entity entity = entities.create();
 	entity.assign<Material>(Body::Static, Shape::Polygon, 10.0f, 0.0f, 0.1f);
 	entity.assign<Size>(BRICK_WIDTH, BRICK_HEIGHT);
-	entity.assign<Position>(x, y);
+	entity.assign<Position>(WALL_THICKNESS + (BRICK_WIDTH / 2) + (x * BRICK_WIDTH), WALL_THICKNESS + (BRICK_HEIGHT / 2) + (y * BRICK_HEIGHT));
 	entity.assign<Renderable>(data[brick].sprite);
 	entity.assign<Color>(data[brick].r, data[brick].g, data[brick].b);
 	entity.assign<Score>(data[brick].points);

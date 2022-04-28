@@ -20,7 +20,7 @@ fruit::Component<Game> getGameComponent() {
 		.registerConstructor<LimitSystem()>()
 		.registerProvider([](Common *common) { return new PhysicsSystem(common->world); })
 		.registerProvider([](Common *common) { return new ContactSystem(common->world); })
-		.registerProvider([](EntityFactory *factory) { return new SpawnSystem(factory); })
+		.registerProvider([](EntityFactory *factory) { return new SpawnSystem(factory, 1); })
 		.registerProvider([](Common *common) { return new BodySystem(common->world); })
 		.registerConstructor<SpeedSystem()>()
 		.registerConstructor<Game(

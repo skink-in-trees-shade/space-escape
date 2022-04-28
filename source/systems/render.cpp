@@ -42,7 +42,7 @@ void RenderSystem::update(entityx::EntityManager &entities, entityx::EventManage
 
 	entities.each<Position, Message>([this](entityx::Entity entity, Position &position, Message &message) {
 		if (font == nullptr) {
-			font = IMG_LoadTexture(renderer, "assets/font.png");
+			font = IMG_LoadTexture(renderer, "assets/images/font.png");
 		}
 
 		static char font_map[GLYPH_WIDTH][GLYPH_HEIGHT] = {
@@ -84,16 +84,16 @@ SDL_Texture *RenderSystem::get_texture(Sprite sprite) {
 	if (iterator != textures.end()) {
 		return iterator->second;
 	}
-	static std::map<Sprite, const char *> assets = {
-		{Sprite::Background, "assets/background.png"},
-		{Sprite::Ball, "assets/ball.png"},
-		{Sprite::Brick, "assets/brick.png"},
-		{Sprite::StrongBrick, "assets/strong_brick.png"},
-		{Sprite::Paddle, "assets/paddle.png"},
-		{Sprite::WallLeft, "assets/wall_left.png"},
-		{Sprite::WallRight, "assets/wall_right.png"},
-		{Sprite::WallTop, "assets/wall_top.png"},
-		{Sprite::WallBottom, "assets/wall_bottom.png"},
+	static std::map<Sprite, std::string> assets = {
+		{Sprite::Background, "background"},
+		{Sprite::Ball, "ball"},
+		{Sprite::Brick, "brick"},
+		{Sprite::StrongBrick, "strong_brick"},
+		{Sprite::Paddle, "paddle"},
+		{Sprite::WallLeft, "wall_left"},
+		{Sprite::WallRight, "wall_right"},
+		{Sprite::WallTop, "wall_top"},
+		{Sprite::WallBottom, "wall_bottom"},
 	};
-	return textures[sprite] = IMG_LoadTexture(renderer, assets[sprite]);
+	return textures[sprite] = IMG_LoadTexture(renderer, ("assets/images/" + assets[sprite] + ".png").c_str());
 }

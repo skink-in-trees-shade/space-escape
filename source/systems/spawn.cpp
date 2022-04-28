@@ -1,10 +1,12 @@
+#include <fstream>
+#include "core/config.hpp"
 #include "spawn.hpp"
 
-SpawnSystem::SpawnSystem(EntityFactory *factory) : factory(factory) {
+SpawnSystem::SpawnSystem(EntityFactory *factory, int round) : factory(factory), round(round) {
 }
 
 void SpawnSystem::update(entityx::EntityManager &entities, entityx::EventManager &events, entityx::TimeDelta dt) {
-	if (!entities_spawned) {
+	if (entities.size() == 0) {
 		factory->create_background(entities);
 		factory->create_wall(entities, Wall::Top);
 		factory->create_wall(entities, Wall::Bottom);
@@ -13,23 +15,29 @@ void SpawnSystem::update(entityx::EntityManager &entities, entityx::EventManager
 		factory->create_ball(entities);
 		factory->create_paddle(entities);
 
-		constexpr int bricks_per_line = 10;
-		for (int i = 0; i < bricks_per_line; i++) {
-			factory->create_brick(entities, Brick::One);
+		std::ifstream level("assets/levels/level" + ((round < 10 ? "0" : "") + std::to_string(round)) + ".dat");
+		for (int y = 0; y < LEVEL_HEIGHT; y++) {
+			std::string row;
+			std::getline(level, row);
+			for (int x = 0; x < LEVEL_WIDTH; x++) {
+				switch (row[x]) {
+				case '1':
+					factory->create_brick(entities, Brick::One, x, y);
+					break;
+				case '2':
+					factory->create_brick(entities, Brick::Two, x, y);
+					break;
+				case '3':
+					factory->create_brick(entities, Brick::Three, x, y);
+					break;
+				}
+			}
 		}
-		for (int i = 0; i < bricks_per_line; i++) {
-			factory->create_brick(entities, Brick::Two);
-		}
-		for (int i = 0; i < bricks_per_line; i++) {
-			factory->create_brick(entities, Brick::Three);
-		}
+
+		factory->create_round_title_message(entities);
+		factory->create_round_number_message(entities, round);
 
 		factory->create_score_title_message(entities);
 		factory->create_score_points_message(entities);
-
-		factory->create_round_title_message(entities);
-		factory->create_round_number_message(entities, 1);
-
-		entities_spawned = true;
 	}
 }

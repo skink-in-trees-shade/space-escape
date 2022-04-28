@@ -20,7 +20,7 @@ class EntityFactory final {
 public:
 	void create_background(entityx::EntityManager &entities);
 	void create_ball(entityx::EntityManager &entities);
-	void create_brick(entityx::EntityManager &entities, Brick brick);
+	void create_brick(entityx::EntityManager &entities, Brick brick, int x, int y);
 	void create_paddle(entityx::EntityManager &entities);
 	void create_wall(entityx::EntityManager &entities, Wall wall);
 	void create_round_title_message(entityx::EntityManager &entities);
