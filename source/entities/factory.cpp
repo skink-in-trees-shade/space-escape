@@ -32,28 +32,15 @@ void EntityFactory::create_ball(entityx::EntityManager &entities) {
 	entity.assign<Limited>(160, 64, 64);
 }
 
-void EntityFactory::create_brick(entityx::EntityManager &entities, Brick brick, int x, int y) {
-	struct BrickData {
-		Sprite sprite;
-		int r;
-		int g;
-		int b;
-		int points;
-	};
-	static std::map<Brick, BrickData> data = {
-		{Brick::One, {Sprite::StrongBrick, COLOR_ACTIVE_1, 0}},
-		{Brick::Two, {Sprite::Brick, COLOR_ACTIVE_2, 20}},
-		{Brick::Three, {Sprite::Brick, COLOR_ACTIVE_3, 10}},
-	};
-
+void EntityFactory::create_brick(entityx::EntityManager &entities, int x, int y, bool strong, int r, int g, int b, int points) {
 	entityx::Entity entity = entities.create();
 	entity.assign<Material>(Body::Static, Shape::Polygon, 10.0f, 0.0f, 0.1f);
 	entity.assign<Size>(BRICK_WIDTH, BRICK_HEIGHT);
 	entity.assign<Position>(WALL_THICKNESS + (BRICK_WIDTH / 2) + (x * BRICK_WIDTH), WALL_THICKNESS + (BRICK_HEIGHT / 2) + (y * BRICK_HEIGHT));
-	entity.assign<Renderable>(data[brick].sprite);
-	entity.assign<Color>(data[brick].r, data[brick].g, data[brick].b);
-	entity.assign<Score>(data[brick].points);
-	if (brick != Brick::One) {
+	entity.assign<Renderable>(strong ? Sprite::StrongBrick : Sprite::Brick);
+	entity.assign<Color>(r, g, b);
+	entity.assign<Score>(points);
+	if (!strong) {
 		entity.assign<Breakable>();
 	}
 }
@@ -69,46 +56,20 @@ void EntityFactory::create_paddle(entityx::EntityManager &entities) {
 	entity.assign<Score>(0);
 }
 
-void EntityFactory::create_wall(entityx::EntityManager &entities, Wall wall) {
+void EntityFactory::create_wall(entityx::EntityManager &entities, int x, int y, int w, int h) {
 	entityx::Entity entity = entities.create();
-
-	int x, y, w, h;
-	Sprite sprite;
-	switch (wall) {
-	case Wall::Top:
-		x = SCREEN_WIDTH / 2;
-		y = WALL_THICKNESS / 2;
-		w = SCREEN_WIDTH;
-		h = WALL_THICKNESS;
-		sprite = Sprite::WallTop;
-		break;
-	case Wall::Bottom:
-		x = SCREEN_WIDTH / 2;
-		y = SCREEN_HEIGHT - (WALL_THICKNESS / 2);
-		w = SCREEN_WIDTH;
-		h = WALL_THICKNESS;
-		sprite = Sprite::WallBottom;
-		break;
-	case Wall::Left:
-		x = WALL_THICKNESS / 2;
-		y = SCREEN_HEIGHT / 2;
-		w = WALL_THICKNESS;
-		h = SCREEN_HEIGHT;
-		sprite = Sprite::WallLeft;
-		break;
-	case Wall::Right:
-		x = SCREEN_WIDTH - (WALL_THICKNESS / 2);
-		y = SCREEN_HEIGHT / 2;
-		w = WALL_THICKNESS;
-		h = SCREEN_HEIGHT;
-		sprite = Sprite::WallRight;
-		break;
-	}
-
 	entity.assign<Material>(Body::Static, Shape::Polygon, 0.0f, 0.0f, 0.0f);
 	entity.assign<Size>(w, h);
 	entity.assign<Position>(x, y);
-	entity.assign<Renderable>(sprite);
+	if (y < SCREEN_HEIGHT / 2) {
+		entity.assign<Renderable>(Sprite::WallTop);
+	} else if (y > SCREEN_HEIGHT / 2) {
+		entity.assign<Renderable>(Sprite::WallBottom);
+	} else if (x < SCREEN_WIDTH / 2) {
+		entity.assign<Renderable>(Sprite::WallLeft);
+	} else if (x > SCREEN_WIDTH / 2) {
+		entity.assign<Renderable>(Sprite::WallRight);
+	}
 	entity.assign<Color>(COLOR_MAIN);
 }
 
@@ -137,4 +98,32 @@ void EntityFactory::create_score_points_message(entityx::EntityManager &entities
 	entity.assign<Score>(0);
 	entity.assign<Message>("0");
 	entity.assign<Position>(SCREEN_WIDTH + GLYPH_WIDTH, GLYPH_HEIGHT * 5);
+}
+
+void EntityFactory::create_brick_one(entityx::EntityManager &entities, int x, int y) {
+	create_brick(entities, x, y, true, COLOR_ACTIVE_1, 0);
+}
+
+void EntityFactory::create_brick_two(entityx::EntityManager &entities, int x, int y) {
+	create_brick(entities, x, y, false, COLOR_ACTIVE_2, 20);
+}
+
+void EntityFactory::create_brick_three(entityx::EntityManager &entities, int x, int y) {
+	create_brick(entities, x, y, false, COLOR_ACTIVE_3, 10);
+}
+
+void EntityFactory::create_top_wall(entityx::EntityManager &entities) {
+	create_wall(entities, SCREEN_WIDTH / 2, WALL_THICKNESS / 2, SCREEN_WIDTH, WALL_THICKNESS);
+}
+
+void EntityFactory::create_bottom_wall(entityx::EntityManager &entities) {
+	create_wall(entities, SCREEN_WIDTH / 2, SCREEN_HEIGHT - (WALL_THICKNESS / 2), SCREEN_WIDTH, WALL_THICKNESS);
+}
+
+void EntityFactory::create_left_wall(entityx::EntityManager &entities) {
+	create_wall(entities, WALL_THICKNESS / 2, SCREEN_HEIGHT / 2, WALL_THICKNESS, SCREEN_HEIGHT);
+}
+
+void EntityFactory::create_right_wall(entityx::EntityManager &entities) {
+	create_wall(entities, SCREEN_WIDTH - (WALL_THICKNESS / 2), SCREEN_HEIGHT / 2, WALL_THICKNESS, SCREEN_HEIGHT);
 }

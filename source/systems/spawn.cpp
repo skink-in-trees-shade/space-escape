@@ -8,10 +8,10 @@ SpawnSystem::SpawnSystem(EntityFactory *factory, int round) : factory(factory), 
 void SpawnSystem::update(entityx::EntityManager &entities, entityx::EventManager &events, entityx::TimeDelta dt) {
 	if (entities.size() == 0) {
 		factory->create_background(entities);
-		factory->create_wall(entities, Wall::Top);
-		factory->create_wall(entities, Wall::Bottom);
-		factory->create_wall(entities, Wall::Left);
-		factory->create_wall(entities, Wall::Right);
+		factory->create_top_wall(entities);
+		factory->create_bottom_wall(entities);
+		factory->create_left_wall(entities);
+		factory->create_right_wall(entities);
 		factory->create_ball(entities);
 		factory->create_paddle(entities);
 
@@ -22,13 +22,13 @@ void SpawnSystem::update(entityx::EntityManager &entities, entityx::EventManager
 			for (int x = 0; x < LEVEL_WIDTH; x++) {
 				switch (row[x]) {
 				case '1':
-					factory->create_brick(entities, Brick::One, x, y);
+					factory->create_brick_one(entities, x, y);
 					break;
 				case '2':
-					factory->create_brick(entities, Brick::Two, x, y);
+					factory->create_brick_two(entities, x, y);
 					break;
 				case '3':
-					factory->create_brick(entities, Brick::Three, x, y);
+					factory->create_brick_three(entities, x, y);
 					break;
 				}
 			}
