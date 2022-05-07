@@ -2,7 +2,8 @@
 #define COMPONENTS_RENDERABLE_HPP
 
 enum class Sprite {
-	Background,
+	Background1,
+	Background2,
 	Ball,
 	Brick,
 	StrongBrick,

@@ -7,7 +7,7 @@ SpawnSystem::SpawnSystem(EntityFactory *factory, int round) : factory(factory), 
 
 void SpawnSystem::update(entityx::EntityManager &entities, entityx::EventManager &events, entityx::TimeDelta dt) {
 	if (entities.size() == 0) {
-		factory->create_background(entities);
+		factory->create_background(entities, (round - 1) % 2);
 		factory->create_top_wall(entities);
 		factory->create_bottom_wall(entities);
 		factory->create_left_wall(entities);

@@ -1,3 +1,4 @@
+#include <string>
 #include <fruit/fruit.h>
 #include "systems/body.hpp"
 #include "systems/contact.hpp"
@@ -11,7 +12,8 @@
 #include "core/common.hpp"
 #include "core/game.hpp"
 
-fruit::Component<Game> getGameComponent() {
+fruit::Component<Game> getGameComponent(const int round) {
+	const static int _round = round;
 	return fruit::createComponent()
 		.registerConstructor<Common()>()
 		.registerConstructor<EntityFactory()>()
@@ -20,7 +22,7 @@ fruit::Component<Game> getGameComponent() {
 		.registerConstructor<LimitSystem()>()
 		.registerProvider([](Common *common) { return new PhysicsSystem(common->world); })
 		.registerProvider([](Common *common) { return new ContactSystem(common->world); })
-		.registerProvider([](EntityFactory *factory) { return new SpawnSystem(factory, 1); })
+		.registerProvider([](EntityFactory *factory) { return new SpawnSystem(factory, _round); })
 		.registerProvider([](Common *common) { return new BodySystem(common->world); })
 		.registerConstructor<SpeedSystem()>()
 		.registerConstructor<Game(
@@ -35,8 +37,9 @@ fruit::Component<Game> getGameComponent() {
 }
 
 int main(int argc, char *argv[]) {
-	fruit::Injector<Game> injector(getGameComponent);
-	Game *game = injector.get<Game *>();
+	const int round = argc >= 2 ? std::stoi(argv[1]) : 1;
+	fruit::Injector<Game> injector(getGameComponent, round);
+	Game *game(injector);
 	game->run();
 	return 0;
 }

@@ -14,11 +14,12 @@
 #include "core/config.hpp"
 #include "factory.hpp"
 
-void EntityFactory::create_background(entityx::EntityManager &entities) {
+void EntityFactory::create_background(entityx::EntityManager &entities, int n) {
+	constexpr static Sprite backgrounds[] = {Sprite::Background1, Sprite::Background2};
 	entityx::Entity entity = entities.create();
 	entity.assign<Size>(SCREEN_WIDTH, SCREEN_HEIGHT);
 	entity.assign<Position>(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
-	entity.assign<Renderable>(Sprite::Background);
+	entity.assign<Renderable>(backgrounds[n]);
 }
 
 void EntityFactory::create_ball(entityx::EntityManager &entities) {
