@@ -85,7 +85,8 @@ SDL_Texture *RenderSystem::get_texture(Sprite sprite) {
 		return iterator->second;
 	}
 	static std::map<Sprite, std::string> assets = {
-		{Sprite::Background, "background"},
+		{Sprite::Background1, "background_1"},
+		{Sprite::Background2, "background_2"},
 		{Sprite::Ball, "ball"},
 		{Sprite::Brick, "brick"},
 		{Sprite::StrongBrick, "strong_brick"},

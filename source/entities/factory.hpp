@@ -5,7 +5,7 @@
 
 class EntityFactory final {
 public:
-	void create_background(entityx::EntityManager &entities);
+	void create_background(entityx::EntityManager &entities, int n);
 	void create_ball(entityx::EntityManager &entities);
 	void create_brick_one(entityx::EntityManager &entities, int x, int y);
 	void create_brick_two(entityx::EntityManager &entities, int x, int y);
