@@ -3,6 +3,7 @@
 #include "components/breakable.hpp"
 #include "components/color.hpp"
 #include "components/controlled.hpp"
+#include "components/joint.hpp"
 #include "components/limited.hpp"
 #include "components/material.hpp"
 #include "components/message.hpp"
@@ -54,6 +55,7 @@ void EntityFactory::create_paddle(entityx::EntityManager &entities) {
 	entity.assign<Renderable>(Sprite::Paddle);
 	entity.assign<Color>(COLOR_MAIN);
 	entity.assign<Controlled>();
+	entity.assign<Joint>();
 	entity.assign<Score>(0);
 }
 

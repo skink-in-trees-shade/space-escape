@@ -8,6 +8,7 @@ Game::Game(
 	std::shared_ptr<ContactSystem> contact,
 	std::shared_ptr<SpawnSystem> spawn,
 	std::shared_ptr<BodySystem> body,
+	std::shared_ptr<JointSystem> joint,
 	std::shared_ptr<SpeedSystem> speed,
 	std::shared_ptr<ScoreSystem> score,
 	std::shared_ptr<DestructionSystem> destruction) {
@@ -18,6 +19,7 @@ Game::Game(
 	systems.add(contact);
 	systems.add(spawn);
 	systems.add(body);
+	systems.add(joint);
 	systems.add(speed);
 	systems.add(score);
 	systems.add(destruction);
@@ -52,6 +54,7 @@ void Game::run() {
 				systems.update<ContactSystem>(dt);
 				systems.update<SpawnSystem>(dt);
 				systems.update<BodySystem>(dt);
+				systems.update<JointSystem>(dt);
 				systems.update<SpeedSystem>(dt);
 				systems.update<ScoreSystem>(dt);
 				systems.update<DestructionSystem>(dt);
