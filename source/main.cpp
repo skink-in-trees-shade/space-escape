@@ -2,10 +2,12 @@
 #include <fruit/fruit.h>
 #include "systems/body.hpp"
 #include "systems/contact.hpp"
+#include "systems/destruction.hpp"
 #include "systems/limit.hpp"
 #include "systems/input.hpp"
 #include "systems/physics.hpp"
 #include "systems/render.hpp"
+#include "systems/score.hpp"
 #include "systems/spawn.hpp"
 #include "systems/speed.hpp"
 #include "entities/factory.hpp"
@@ -25,6 +27,8 @@ fruit::Component<Game> getGameComponent(const int round) {
 		.registerProvider([](EntityFactory *factory) { return new SpawnSystem(factory, _round); })
 		.registerProvider([](Common *common) { return new BodySystem(common->world); })
 		.registerConstructor<SpeedSystem()>()
+		.registerConstructor<ScoreSystem()>()
+		.registerProvider([](Common *common) { return new DestructionSystem(common->world); })
 		.registerConstructor<Game(
 			std::shared_ptr<RenderSystem>,
 			std::shared_ptr<InputSystem>,
@@ -33,7 +37,9 @@ fruit::Component<Game> getGameComponent(const int round) {
 			std::shared_ptr<ContactSystem>,
 			std::shared_ptr<SpawnSystem>,
 			std::shared_ptr<BodySystem>,
-			std::shared_ptr<SpeedSystem>)>();
+			std::shared_ptr<SpeedSystem>,
+			std::shared_ptr<ScoreSystem>,
+			std::shared_ptr<DestructionSystem>)>();
 }
 
 int main(int argc, char *argv[]) {
