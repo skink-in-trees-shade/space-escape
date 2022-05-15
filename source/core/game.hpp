@@ -5,6 +5,7 @@
 #include "systems/body.hpp"
 #include "systems/contact.hpp"
 #include "systems/destruction.hpp"
+#include "systems/joint.hpp"
 #include "systems/limit.hpp"
 #include "systems/input.hpp"
 #include "systems/physics.hpp"
@@ -23,6 +24,7 @@ public:
 		std::shared_ptr<ContactSystem> contact,
 		std::shared_ptr<SpawnSystem> spawn,
 		std::shared_ptr<BodySystem> body,
+		std::shared_ptr<JointSystem> joint,
 		std::shared_ptr<SpeedSystem> speed,
 		std::shared_ptr<ScoreSystem> score,
 		std::shared_ptr<DestructionSystem> destruction);

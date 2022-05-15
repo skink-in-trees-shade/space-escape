@@ -1,4 +1,3 @@
-#include "components/controlled.hpp"
 #include "components/material.hpp"
 #include "components/physics.hpp"
 #include "components/position.hpp"
@@ -44,22 +43,10 @@ void BodySystem::update(entityx::EntityManager &entities, entityx::EventManager 
 			fixture_def.density = material.density;
 			fixture_def.friction = material.friction;
 			fixture_def.restitution = material.restitution;
-			b2Fixture *fixture = body->CreateFixture(&fixture_def);
+			body->CreateFixture(&fixture_def);
 
 			entity.assign<Physics>(body);
-
-			if (entity.has_component<Controlled>()) {
-				b2BodyDef floor_def;
-				floor_def.type = b2_staticBody;
-				body_def.fixedRotation = true;
-				body_def.position.Set(SCREEN_WIDTH / 2.0f / PTM_RATIO, SCREEN_HEIGHT + 4 / 2 / PTM_RATIO);
-				b2Body *floor = world->CreateBody(&floor_def);
-
-				b2PrismaticJointDef joint_def;
-				joint_def.collideConnected = true;
-				joint_def.Initialize(body, floor, body->GetWorldCenter(), b2Vec2(1.0f, 0.0f));
-				world->CreateJoint(&joint_def);
-			}
+			entity.remove<Material>();
 		}
 	});
 }
