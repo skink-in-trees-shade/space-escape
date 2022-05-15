@@ -8,7 +8,9 @@ Game::Game(
 	std::shared_ptr<ContactSystem> contact,
 	std::shared_ptr<SpawnSystem> spawn,
 	std::shared_ptr<BodySystem> body,
-	std::shared_ptr<SpeedSystem> speed) {
+	std::shared_ptr<SpeedSystem> speed,
+	std::shared_ptr<ScoreSystem> score,
+	std::shared_ptr<DestructionSystem> destruction) {
 	systems.add(render);
 	systems.add(input);
 	systems.add(limit);
@@ -17,6 +19,8 @@ Game::Game(
 	systems.add(spawn);
 	systems.add(body);
 	systems.add(speed);
+	systems.add(score);
+	systems.add(destruction);
 	systems.configure();
 }
 
@@ -49,6 +53,8 @@ void Game::run() {
 				systems.update<SpawnSystem>(dt);
 				systems.update<BodySystem>(dt);
 				systems.update<SpeedSystem>(dt);
+				systems.update<ScoreSystem>(dt);
+				systems.update<DestructionSystem>(dt);
 			}
 			acc -= iter * dt;
 

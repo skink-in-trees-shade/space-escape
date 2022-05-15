@@ -1,8 +1,7 @@
-#include <string>
+#include <algorithm>
 #include "components/physics.hpp"
 #include "components/breakable.hpp"
-#include "components/score.hpp"
-#include "components/message.hpp"
+#include "components/collided.hpp"
 #include "core/config.hpp"
 #include "contact.hpp"
 
@@ -12,18 +11,9 @@ ContactSystem::ContactSystem(b2World *world) : world(world) {
 
 void ContactSystem::update(entityx::EntityManager &entities, entityx::EventManager &events, entityx::TimeDelta dt) {
 	if (!bodies.empty()) {
-		entities.each<Physics, Breakable, Score>([&](entityx::Entity entity, Physics &physics, Breakable &breakable, Score &score) {
-			for (const b2Body *collided : bodies) {
-				if (collided == physics.body) {
-					world->DestroyBody(physics.body);
-
-					entities.each<Message, Score>([&](entityx::Entity targetEntity, Message &targetMessage, Score &targetScore) {
-						targetScore.points += score.points;
-						targetMessage.text = std::to_string(targetScore.points);
-					});
-
-					entity.destroy();
-				}
+		entities.each<Physics, Breakable>([&](entityx::Entity entity, Physics &physics, Breakable &breakable) {
+			if (std::find(bodies.begin(), bodies.end(), physics.body) != bodies.end()) {
+				entity.assign<Collided>();
 			}
 		});
 		bodies.clear();
