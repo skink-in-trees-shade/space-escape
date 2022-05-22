@@ -29,16 +29,16 @@ void BodySystem::update(entityx::EntityManager &entities, entityx::EventManager 
 			b2Body *body = world->CreateBody(&body_def);
 
 			b2FixtureDef fixture_def;
+			b2PolygonShape polygon_def;
+			b2CircleShape circle_def;
 			switch (material.shape) {
 			case Shape::Polygon: {
-				b2PolygonShape shape_def;
-				shape_def.SetAsBox(size.w / 2.0f / PTM_RATIO, size.h / 2.0f / PTM_RATIO);
-				fixture_def.shape = &shape_def;
+				polygon_def.SetAsBox(size.w / 2.0f / PTM_RATIO, size.h / 2.0f / PTM_RATIO);
+				fixture_def.shape = &polygon_def;
 			} break;
 			case Shape::Circle: {
-				b2CircleShape shape_def;
-				shape_def.m_radius = size.w / 2.0f / PTM_RATIO;
-				fixture_def.shape = &shape_def;
+				circle_def.m_radius = size.w / 2.0f / PTM_RATIO;
+				fixture_def.shape = &circle_def;
 			} break;
 			}
 			fixture_def.density = material.density;
