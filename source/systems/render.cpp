@@ -1,4 +1,3 @@
-#include <SDL2/SDL_image.h>
 #include "components/color.hpp"
 #include "components/message.hpp"
 #include "components/position.hpp"
@@ -7,14 +6,7 @@
 #include "core/config.hpp"
 #include "render.hpp"
 
-RenderSystem::RenderSystem(SDL_Renderer *renderer) : renderer(renderer), font(nullptr) {
-}
-
-RenderSystem::~RenderSystem() {
-	for (const std::pair<Sprite, SDL_Texture *> &texture : textures) {
-		SDL_DestroyTexture(texture.second);
-	}
-	SDL_DestroyTexture(font);
+RenderSystem::RenderSystem(SDL_Renderer *renderer, Resource *resource) : renderer(renderer), resource(resource) {
 }
 
 void RenderSystem::update(entityx::EntityManager &entities, entityx::EventManager &events, entityx::TimeDelta dt) {
@@ -22,7 +14,7 @@ void RenderSystem::update(entityx::EntityManager &entities, entityx::EventManage
 	SDL_RenderClear(renderer);
 
 	entities.each<Position, Size, Renderable>([this](entityx::Entity entity, Position &position, Size &size, Renderable &renderable) {
-		SDL_Texture *texture = get_texture(renderable.sprite);
+		SDL_Texture *texture = resource->textures[renderable.sprite];
 
 		entityx::ComponentHandle<Color> colorHandle = entity.component<Color>();
 		if (colorHandle) {
@@ -41,10 +33,6 @@ void RenderSystem::update(entityx::EntityManager &entities, entityx::EventManage
 	});
 
 	entities.each<Position, Message>([this](entityx::Entity entity, Position &position, Message &message) {
-		if (font == nullptr) {
-			font = IMG_LoadTexture(renderer, "assets/images/font.png");
-		}
-
 		static char font_map[GLYPH_WIDTH][GLYPH_HEIGHT] = {
 			{'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'},
 			{'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P'},
@@ -62,39 +50,21 @@ void RenderSystem::update(entityx::EntityManager &entities, entityx::EventManage
 				}
 			}
 			if (src.x >= 0 && src.y >= 0) {
+				SDL_Texture *texture = resource->textures[Sprite::Font];
+
 				entityx::ComponentHandle<Color> colorHandle = entity.component<Color>();
 				if (colorHandle) {
 					Color *color = colorHandle.get();
-					SDL_SetTextureColorMod(font, color->r, color->g, color->b);
+					SDL_SetTextureColorMod(texture, color->r, color->g, color->b);
 				} else {
-					SDL_SetTextureColorMod(font, 255, 255, 255);
+					SDL_SetTextureColorMod(texture, 255, 255, 255);
 				}
 
 				SDL_Rect dst = {position.x + i * GLYPH_WIDTH, position.y, GLYPH_WIDTH, GLYPH_HEIGHT};
-				SDL_RenderCopy(renderer, font, &src, &dst);
+				SDL_RenderCopy(renderer, texture, &src, &dst);
 			}
 		}
 	});
 
 	SDL_RenderPresent(renderer);
-}
-
-SDL_Texture *RenderSystem::get_texture(Sprite sprite) {
-	std::map<Sprite, SDL_Texture *>::iterator iterator = textures.find(sprite);
-	if (iterator != textures.end()) {
-		return iterator->second;
-	}
-	static std::map<Sprite, std::string> assets = {
-		{Sprite::Background1, "background_1"},
-		{Sprite::Background2, "background_2"},
-		{Sprite::Ball, "ball"},
-		{Sprite::Brick, "brick"},
-		{Sprite::StrongBrick, "strong_brick"},
-		{Sprite::Paddle, "paddle"},
-		{Sprite::WallLeft, "wall_left"},
-		{Sprite::WallRight, "wall_right"},
-		{Sprite::WallTop, "wall_top"},
-		{Sprite::WallBottom, "wall_bottom"},
-	};
-	return textures[sprite] = IMG_LoadTexture(renderer, ("assets/images/" + assets[sprite] + ".png").c_str());
 }
