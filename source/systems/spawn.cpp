@@ -1,8 +1,7 @@
-#include <fstream>
 #include "core/config.hpp"
 #include "spawn.hpp"
 
-SpawnSystem::SpawnSystem(EntityFactory *factory, int round) : factory(factory), round(round) {
+SpawnSystem::SpawnSystem(EntityFactory *factory, Resource *resource, int round) : factory(factory), resource(resource), round(round) {
 }
 
 void SpawnSystem::update(entityx::EntityManager &entities, entityx::EventManager &events, entityx::TimeDelta dt) {
@@ -15,12 +14,10 @@ void SpawnSystem::update(entityx::EntityManager &entities, entityx::EventManager
 		factory->create_ball(entities);
 		factory->create_paddle(entities);
 
-		std::ifstream level("assets/levels/level" + ((round < 10 ? "0" : "") + std::to_string(round)) + ".dat");
+		std::string level = resource->levels[round];
 		for (int y = 0; y < LEVEL_HEIGHT; y++) {
-			std::string row;
-			std::getline(level, row);
 			for (int x = 0; x < LEVEL_WIDTH; x++) {
-				switch (row[x]) {
+				switch (level[y * (LEVEL_WIDTH + 1) + x]) {
 				case '1':
 					factory->create_brick_one(entities, x, y);
 					break;

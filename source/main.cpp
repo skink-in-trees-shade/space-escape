@@ -14,18 +14,20 @@
 #include "entities/factory.hpp"
 #include "core/common.hpp"
 #include "core/game.hpp"
+#include "core/resource.hpp"
 
 fruit::Component<Game> getGameComponent(const int round) {
 	const static int _round = round;
 	return fruit::createComponent()
 		.registerConstructor<Common()>()
+		.registerProvider([](Common *common) { return new Resource(common->renderer); })
 		.registerConstructor<EntityFactory()>()
-		.registerProvider([](Common *common) { return new RenderSystem(common->renderer); })
+		.registerProvider([](Common *common, Resource *resource) { return new RenderSystem(common->renderer, resource); })
 		.registerConstructor<InputSystem()>()
 		.registerConstructor<LimitSystem()>()
 		.registerProvider([](Common *common) { return new PhysicsSystem(common->world); })
 		.registerProvider([](Common *common) { return new ContactSystem(common->world); })
-		.registerProvider([](EntityFactory *factory) { return new SpawnSystem(factory, _round); })
+		.registerProvider([](EntityFactory *factory, Resource *resource) { return new SpawnSystem(factory, resource, _round); })
 		.registerProvider([](Common *common) { return new BodySystem(common->world); })
 		.registerProvider([](Common *common) { return new JointSystem(common->world); })
 		.registerConstructor<SpeedSystem()>()
