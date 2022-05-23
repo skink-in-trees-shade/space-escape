@@ -22,6 +22,8 @@ jobs:
       CONAN_SYSREQUIRES_MODE: enabled
     steps:
       - uses: actions/checkout@v2
+      - run: sed -i '7i libxml2/2.9.14' conanfile.txt
+        if: startsWith(matrix.config.os, 'ubuntu')
       - uses: actions/cache@v2
         with:
           path: build
