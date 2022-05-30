@@ -1,5 +1,6 @@
 #include <string>
 #include <fruit/fruit.h>
+#include "systems/animation.hpp"
 #include "systems/body.hpp"
 #include "systems/contact.hpp"
 #include "systems/destruction.hpp"
@@ -33,6 +34,7 @@ fruit::Component<Game> getGameComponent(const int round) {
 		.registerConstructor<SpeedSystem()>()
 		.registerConstructor<ScoreSystem()>()
 		.registerProvider([](Common *common) { return new DestructionSystem(common->world); })
+		.registerConstructor<AnimationSystem()>()
 		.registerConstructor<Game(
 			std::shared_ptr<RenderSystem>,
 			std::shared_ptr<InputSystem>,
@@ -44,6 +46,7 @@ fruit::Component<Game> getGameComponent(const int round) {
 			std::shared_ptr<JointSystem>,
 			std::shared_ptr<SpeedSystem>,
 			std::shared_ptr<ScoreSystem>,
+			std::shared_ptr<AnimationSystem>,
 			std::shared_ptr<DestructionSystem>)>();
 }
 
