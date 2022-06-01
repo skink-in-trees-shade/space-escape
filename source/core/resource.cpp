@@ -25,6 +25,13 @@ Resource::Resource(SDL_Renderer *renderer) : renderer(renderer) {
 	}
 	IMG_Quit();
 
+	const static std::map<Audio, std::string> sound_map = {
+		{Audio::Hit1, "hit1"},
+	};
+	for (const auto &sound : sound_map) {
+		sounds[sound.first] = Mix_LoadWAV(("assets/sounds/" + sound.second + ".wav").c_str());
+	}
+
 	const static std::map<int, std::string> level_map = {
 		{1, "01"},
 		{2, "02"},
@@ -40,5 +47,8 @@ Resource::Resource(SDL_Renderer *renderer) : renderer(renderer) {
 Resource::~Resource() {
 	for (const auto &texture : textures) {
 		SDL_DestroyTexture(texture.second);
+	}
+	for (const auto &sound : sounds) {
+		Mix_FreeChunk(sound.second);
 	}
 }

@@ -13,23 +13,21 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - { os: ubuntu-20.04, cc: gcc }
-          - { os: windows-2019, cc: cl }
-          - { os: macos-10.15, cc: clang }
+          - { os: ubuntu-latest, cc: gcc }
+          - { os: windows-latest, cc: cl }
+          - { os: macos-latest, cc: clang }
     env:
-      BUILD_TYPE: Debug
+      BUILD_TYPE: ${{ github.event_name == 'pull_request' && 'Debug' || 'Release' }}
       CONAN_V2_MODE: 1
       CONAN_SYSREQUIRES_MODE: enabled
     steps:
       - uses: actions/checkout@v2
-      - run: sed -i '7i libxml2/2.9.14' conanfile.txt
-        if: startsWith(matrix.config.os, 'ubuntu')
       - uses: actions/cache@v2
         with:
           path: build
-          key: ${{ matrix.config.os }}-${{ hashFiles('conanfile.txt', 'CMakeLists.txt') }}
+          key: ${{ matrix.config.os }}-${{ env.BUILD_TYPE }}-${{ hashFiles('conanfile.py', 'CMakeLists.txt') }}
       - uses: turtlebrowser/get-conan@main
-      - run: conan install . -if build -s build_type=${{ env.BUILD_TYPE }}
+      - run: conan install . -if build -s build_type=${{ env.BUILD_TYPE }} -b missing
       - run: cmake -B build -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
       - run: cmake --build build --config ${{ env.BUILD_TYPE }}
       - run: tar -cvf space-escape.tar -C build/bin .
