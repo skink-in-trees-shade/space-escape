@@ -11,6 +11,7 @@ Game::Game(
 	std::shared_ptr<JointSystem> joint,
 	std::shared_ptr<SpeedSystem> speed,
 	std::shared_ptr<ScoreSystem> score,
+	std::shared_ptr<SoundSystem> sound,
 	std::shared_ptr<DestructionSystem> destruction) {
 	systems.add(render);
 	systems.add(input);
@@ -22,6 +23,7 @@ Game::Game(
 	systems.add(joint);
 	systems.add(speed);
 	systems.add(score);
+	systems.add(sound);
 	systems.add(destruction);
 	systems.configure();
 }
@@ -57,6 +59,7 @@ void Game::run() {
 				systems.update<JointSystem>(dt);
 				systems.update<SpeedSystem>(dt);
 				systems.update<ScoreSystem>(dt);
+				systems.update<SoundSystem>(dt);
 				systems.update<DestructionSystem>(dt);
 			}
 			acc -= iter * dt;

@@ -4,6 +4,7 @@
 #include <map>
 #include <string>
 #include <SDL2/SDL.h>
+#include <SDL_mixer.h>
 
 enum class Sprite {
 	Background1,
@@ -19,11 +20,16 @@ enum class Sprite {
 	Font
 };
 
+enum class Audio {
+	Hit1,
+};
+
 class Resource final {
 public:
 	Resource(SDL_Renderer *renderer);
 	~Resource();
 	std::map<Sprite, SDL_Texture *> textures;
+	std::map<Audio, Mix_Chunk *> sounds;
 	std::map<int, std::string> levels;
 
 private:

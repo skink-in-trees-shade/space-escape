@@ -9,6 +9,7 @@
 #include "systems/physics.hpp"
 #include "systems/render.hpp"
 #include "systems/score.hpp"
+#include "systems/sound.hpp"
 #include "systems/spawn.hpp"
 #include "systems/speed.hpp"
 #include "entities/factory.hpp"
@@ -32,6 +33,7 @@ fruit::Component<Game> getGameComponent(const int round) {
 		.registerProvider([](Common *common) { return new JointSystem(common->world); })
 		.registerConstructor<SpeedSystem()>()
 		.registerConstructor<ScoreSystem()>()
+		.registerProvider([](Resource *resource) { return new SoundSystem(resource); })
 		.registerProvider([](Common *common) { return new DestructionSystem(common->world); })
 		.registerConstructor<Game(
 			std::shared_ptr<RenderSystem>,
@@ -44,6 +46,7 @@ fruit::Component<Game> getGameComponent(const int round) {
 			std::shared_ptr<JointSystem>,
 			std::shared_ptr<SpeedSystem>,
 			std::shared_ptr<ScoreSystem>,
+			std::shared_ptr<SoundSystem>,
 			std::shared_ptr<DestructionSystem>)>();
 }
 

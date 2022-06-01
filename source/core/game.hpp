@@ -11,6 +11,7 @@
 #include "systems/physics.hpp"
 #include "systems/render.hpp"
 #include "systems/score.hpp"
+#include "systems/sound.hpp"
 #include "systems/spawn.hpp"
 #include "systems/speed.hpp"
 
@@ -27,6 +28,7 @@ public:
 		std::shared_ptr<JointSystem> joint,
 		std::shared_ptr<SpeedSystem> speed,
 		std::shared_ptr<ScoreSystem> score,
+		std::shared_ptr<SoundSystem> sound,
 		std::shared_ptr<DestructionSystem> destruction);
 	void run();
 
