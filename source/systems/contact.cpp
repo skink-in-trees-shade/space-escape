@@ -3,6 +3,8 @@
 #include "components/breakable.hpp"
 #include "components/score.hpp"
 #include "components/message.hpp"
+#include "components/life.hpp"
+#include "components/deadly.hpp"
 #include "core/config.hpp"
 #include "contact.hpp"
 
@@ -12,6 +14,14 @@ ContactSystem::ContactSystem(b2World *world) : world(world) {
 
 void ContactSystem::update(entityx::EntityManager &entities, entityx::EventManager &events, entityx::TimeDelta dt) {
 	if (!bodies.empty()) {
+		entities.each<Deadly>([&](entityx::Entity entity, Deadly &deadly) {
+			for (const b2Body *collided : bodies) {
+				if (collided == physics.body) {
+					entities.each<Life>
+				}
+			}
+		});
+
 		entities.each<Physics, Breakable, Score>([&](entityx::Entity entity, Physics &physics, Breakable &breakable, Score &score) {
 			for (const b2Body *collided : bodies) {
 				if (collided == physics.body) {

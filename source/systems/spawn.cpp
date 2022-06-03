@@ -39,5 +39,8 @@ void SpawnSystem::update(entityx::EntityManager &entities, entityx::EventManager
 
 		factory->create_score_title_message(entities);
 		factory->create_score_points_message(entities);
+
+		factory->create_life_title_message(entities);
+		factory->create_life_points_message(entities);
 	}
 }

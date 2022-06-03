@@ -3,7 +3,9 @@
 #include "components/breakable.hpp"
 #include "components/color.hpp"
 #include "components/controlled.hpp"
+#include "components/deadly.hpp"
 #include "components/limited.hpp"
+#include "components/life.hpp"
 #include "components/material.hpp"
 #include "components/message.hpp"
 #include "components/position.hpp"
@@ -33,16 +35,17 @@ void EntityFactory::create_ball(entityx::EntityManager &entities) {
 	entity.assign<Limited>(160, 64, 64);
 }
 
-void EntityFactory::create_brick(entityx::EntityManager &entities, int x, int y, bool strong, int r, int g, int b, int points) {
+void EntityFactory::create_brick(entityx::EntityManager &entities, int x, int y, int hp, int r, int g, int b, int points) {
 	entityx::Entity entity = entities.create();
 	entity.assign<Material>(Body::Static, Shape::Polygon, 10.0f, 0.0f, 0.1f);
 	entity.assign<Size>(BRICK_WIDTH, BRICK_HEIGHT);
 	entity.assign<Position>(WALL_THICKNESS + (BRICK_WIDTH / 2) + (x * BRICK_WIDTH), WALL_THICKNESS + (BRICK_HEIGHT / 2) + (y * BRICK_HEIGHT));
-	entity.assign<Renderable>(strong ? Sprite::StrongBrick : Sprite::Brick);
+	entity.assign<Renderable>(hp == 1 ? Sprite::Brick : Sprite::StrongBrick);
 	entity.assign<Color>(r, g, b);
 	entity.assign<Score>(points);
-	if (!strong) {
+	if (hp) {
 		entity.assign<Breakable>();
+		entity.assign<Life>(hp);
 	}
 }
 
@@ -55,6 +58,7 @@ void EntityFactory::create_paddle(entityx::EntityManager &entities) {
 	entity.assign<Color>(COLOR_MAIN);
 	entity.assign<Controlled>();
 	entity.assign<Score>(0);
+	entity.assign<Life>(3);
 }
 
 void EntityFactory::create_wall(entityx::EntityManager &entities, int x, int y, int w, int h) {
@@ -66,6 +70,7 @@ void EntityFactory::create_wall(entityx::EntityManager &entities, int x, int y, 
 		entity.assign<Renderable>(Sprite::WallTop);
 	} else if (y > SCREEN_HEIGHT / 2) {
 		entity.assign<Renderable>(Sprite::WallBottom);
+		entity.assign<Deadly>();
 	} else if (x < SCREEN_WIDTH / 2) {
 		entity.assign<Renderable>(Sprite::WallLeft);
 	} else if (x > SCREEN_WIDTH / 2) {
@@ -101,16 +106,29 @@ void EntityFactory::create_score_points_message(entityx::EntityManager &entities
 	entity.assign<Position>(SCREEN_WIDTH + GLYPH_WIDTH, GLYPH_HEIGHT * 5);
 }
 
+void EntityFactory::create_life_title_message(entityx::EntityManager &entities) {
+	entityx::Entity entity = entities.create();
+	entity.assign<Message>("LIVES");
+	entity.assign<Position>(SCREEN_WIDTH + GLYPH_WIDTH, GLYPH_HEIGHT * 7);
+	entity.assign<Color>(COLOR_MAIN);
+}
+
+void EntityFactory::create_life_points_message(entityx::EntityManager &entities) {
+	entityx::Entity entity = entities.create();
+	entity.assign<Message>("3");
+	entity.assign<Position>(SCREEN_WIDTH + GLYPH_WIDTH, GLYPH_HEIGHT * 8);
+}
+
 void EntityFactory::create_brick_one(entityx::EntityManager &entities, int x, int y) {
-	create_brick(entities, x, y, true, COLOR_ACTIVE_1, 0);
+	create_brick(entities, x, y, 0, COLOR_ACTIVE_1, 0);
 }
 
 void EntityFactory::create_brick_two(entityx::EntityManager &entities, int x, int y) {
-	create_brick(entities, x, y, false, COLOR_ACTIVE_2, 20);
+	create_brick(entities, x, y, 2, COLOR_ACTIVE_2, 20);
 }
 
 void EntityFactory::create_brick_three(entityx::EntityManager &entities, int x, int y) {
-	create_brick(entities, x, y, false, COLOR_ACTIVE_3, 10);
+	create_brick(entities, x, y, 1, COLOR_ACTIVE_3, 10);
 }
 
 void EntityFactory::create_top_wall(entityx::EntityManager &entities) {

@@ -19,9 +19,11 @@ public:
 	void create_round_number_message(entityx::EntityManager &entities, int round);
 	void create_score_title_message(entityx::EntityManager &entities);
 	void create_score_points_message(entityx::EntityManager &entities);
+	void create_life_title_message(entityx::EntityManager &entities);
+	void create_life_points_message(entityx::EntityManager &entities);
 
 private:
-	void create_brick(entityx::EntityManager &entities, int x, int y, bool strong, int r, int g, int b, int points);
+	void create_brick(entityx::EntityManager &entities, int x, int y, int hp, int r, int g, int b, int points);
 	void create_wall(entityx::EntityManager &entities, int x, int y, int w, int h);
 };
 
