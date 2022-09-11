@@ -3,7 +3,7 @@ from conans import ConanFile, CMake
 class SpaceEscape(ConanFile):
 	settings = "os", "compiler", "build_type", "arch"
 	requires = (
-		"sdl/2.0.20",
+		"sdl/2.24.0",
 		"sdl_image/2.0.5",
 		"sdl_mixer/2.0.4",
 		"entityx/1.3.0",

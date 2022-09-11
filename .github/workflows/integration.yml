@@ -27,7 +27,7 @@ jobs:
           path: build
           key: ${{ matrix.config.os }}-${{ env.BUILD_TYPE }}-${{ hashFiles('conanfile.py', 'CMakeLists.txt') }}
       - uses: turtlebrowser/get-conan@main
-      - run: conan install . -if build -s build_type=${{ env.BUILD_TYPE }} -b missing
+      - run: conan install . -if build -s build_type=${{ env.BUILD_TYPE }} -b missing -c tools.system.package_manager:mode=install -c tools.system.package_manager:sudo=True
       - run: cmake -B build -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
       - run: cmake --build build --config ${{ env.BUILD_TYPE }}
       - run: tar -cvf space-escape.tar -C build/bin .
