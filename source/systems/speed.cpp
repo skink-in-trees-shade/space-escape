@@ -4,7 +4,11 @@
 
 void SpeedSystem::update(entityx::EntityManager &entities, entityx::EventManager &events, entityx::TimeDelta dt) {
 	entities.each<Speed, Physics>([](entityx::Entity entity, Speed &speed, Physics &physics) {
-		physics.body->SetLinearVelocity(b2Vec2(speed.vx, speed.vy));
-		entity.component<Speed>().remove();
+		b2Vec2 velocity = physics.body->GetLinearVelocity();
+		float length = velocity.Normalize();
+		if (length == 0.0f) {
+			velocity = b2Vec2(1.0f, 1.0f);
+		}
+		physics.body->SetLinearVelocity(speed.v * velocity);
 	});
 }

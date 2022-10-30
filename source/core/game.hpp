@@ -6,7 +6,6 @@
 #include "systems/contact.hpp"
 #include "systems/destruction.hpp"
 #include "systems/joint.hpp"
-#include "systems/limit.hpp"
 #include "systems/input.hpp"
 #include "systems/physics.hpp"
 #include "systems/render.hpp"
@@ -20,7 +19,6 @@ public:
 	Game(
 		std::shared_ptr<RenderSystem> render,
 		std::shared_ptr<InputSystem> input,
-		std::shared_ptr<LimitSystem> limit,
 		std::shared_ptr<PhysicsSystem> physics,
 		std::shared_ptr<ContactSystem> contact,
 		std::shared_ptr<SpawnSystem> spawn,
