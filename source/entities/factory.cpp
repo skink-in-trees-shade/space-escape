@@ -3,7 +3,6 @@
 #include "components/color.hpp"
 #include "components/controlled.hpp"
 #include "components/joint.hpp"
-#include "components/limited.hpp"
 #include "components/material.hpp"
 #include "components/message.hpp"
 #include "components/position.hpp"
@@ -29,8 +28,7 @@ void EntityFactory::create_ball(entityx::EntityManager &entities) {
 	entity.assign<Position>(SCREEN_WIDTH / 2, SCREEN_HEIGHT - (WALL_THICKNESS * 2) - PADDLE_HEIGHT);
 	entity.assign<Renderable>(Sprite::Ball);
 	entity.assign<Color>(COLOR_MAIN);
-	entity.assign<Speed>(100, 100);
-	entity.assign<Limited>(160, 64, 64);
+	entity.assign<Speed>(5.0f);
 }
 
 void EntityFactory::create_brick(entityx::EntityManager &entities, int x, int y, bool strong, int r, int g, int b, int points) {

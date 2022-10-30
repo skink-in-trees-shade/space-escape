@@ -4,7 +4,6 @@
 #include "systems/contact.hpp"
 #include "systems/destruction.hpp"
 #include "systems/joint.hpp"
-#include "systems/limit.hpp"
 #include "systems/input.hpp"
 #include "systems/physics.hpp"
 #include "systems/render.hpp"
@@ -25,7 +24,6 @@ fruit::Component<Game> getGameComponent(const int round) {
 		.registerConstructor<EntityFactory()>()
 		.registerProvider([](Common *common, Resource *resource) { return new RenderSystem(common->renderer, resource); })
 		.registerConstructor<InputSystem()>()
-		.registerConstructor<LimitSystem()>()
 		.registerProvider([](Common *common) { return new PhysicsSystem(common->world); })
 		.registerProvider([](Common *common) { return new ContactSystem(common->world); })
 		.registerProvider([](EntityFactory *factory, Resource *resource) { return new SpawnSystem(factory, resource, _round); })
@@ -38,7 +36,6 @@ fruit::Component<Game> getGameComponent(const int round) {
 		.registerConstructor<Game(
 			std::shared_ptr<RenderSystem>,
 			std::shared_ptr<InputSystem>,
-			std::shared_ptr<LimitSystem>,
 			std::shared_ptr<PhysicsSystem>,
 			std::shared_ptr<ContactSystem>,
 			std::shared_ptr<SpawnSystem>,
