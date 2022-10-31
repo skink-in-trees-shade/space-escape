@@ -21,17 +21,16 @@ jobs:
       CONAN_V2_MODE: 1
       CONAN_SYSREQUIRES_MODE: enabled
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/cache@v2
+      - uses: actions/checkout@v3
+      - uses: actions/cache@v3
         with:
           path: build
           key: ${{ matrix.config.os }}-${{ env.BUILD_TYPE }}-${{ hashFiles('conanfile.py', 'CMakeLists.txt') }}
       - uses: turtlebrowser/get-conan@main
       - run: conan install . -if build -s build_type=${{ env.BUILD_TYPE }} -b missing -c tools.system.package_manager:mode=install -c tools.system.package_manager:sudo=True
-      - run: cmake -B build -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
-      - run: cmake --build build --config ${{ env.BUILD_TYPE }}
+      - run: conan build . -if build
       - run: tar -cvf space-escape.tar -C build/bin .
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.config.os }}-${{ env.BUILD_TYPE }}
           path: space-escape.tar
