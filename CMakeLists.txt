@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 3.00)
 project(space-escape CXX)
 
-include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+find_file(CONANBUILDINFO_FILE conanbuildinfo.cmake HINTS ${CMAKE_BINARY_DIR})
+include(${CONANBUILDINFO_FILE})
 conan_basic_setup()
 
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS source/*.cpp)

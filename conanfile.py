@@ -5,13 +5,12 @@ class SpaceEscape(ConanFile):
 	generators = "cmake"
 
 	def requirements(self):
-		self.requires("sdl/2.24.1")
+		self.requires("sdl/2.26.0")
 		self.requires("sdl_image/2.0.5")
 		self.requires("sdl_mixer/2.0.4")
 		self.requires("entityx/1.3.0")
 		self.requires("box2d/2.4.1")
 		self.requires("fruit/3.6.0")
-		self.requires("zlib/1.2.13", override = True)
 
 	def configure(self):
 		self.options["sdl_image"].bmp = False
