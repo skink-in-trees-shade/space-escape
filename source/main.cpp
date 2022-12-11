@@ -1,10 +1,10 @@
 #include <string>
 #include <fruit/fruit.h>
+#include "systems/animation.hpp"
 #include "systems/body.hpp"
 #include "systems/contact.hpp"
-#include "systems/destruction.hpp"
-#include "systems/joint.hpp"
 #include "systems/input.hpp"
+#include "systems/joint.hpp"
 #include "systems/physics.hpp"
 #include "systems/render.hpp"
 #include "systems/score.hpp"
@@ -32,7 +32,7 @@ fruit::Component<Game> getGameComponent(const int round) {
 		.registerConstructor<SpeedSystem()>()
 		.registerConstructor<ScoreSystem()>()
 		.registerProvider([](Resource *resource) { return new SoundSystem(resource); })
-		.registerProvider([](Common *common) { return new DestructionSystem(common->world); })
+		.registerProvider([](Common *common) { return new AnimationSystem(common->world); })
 		.registerConstructor<Game(
 			std::shared_ptr<RenderSystem>,
 			std::shared_ptr<InputSystem>,
@@ -44,7 +44,7 @@ fruit::Component<Game> getGameComponent(const int round) {
 			std::shared_ptr<SpeedSystem>,
 			std::shared_ptr<ScoreSystem>,
 			std::shared_ptr<SoundSystem>,
-			std::shared_ptr<DestructionSystem>)>();
+			std::shared_ptr<AnimationSystem>)>();
 }
 
 int main(int argc, char *argv[]) {

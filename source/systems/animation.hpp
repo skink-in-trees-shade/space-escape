@@ -1,12 +1,12 @@
-#ifndef SYSTEMS_DESTRUCTION_HPP
-#define SYSTEMS_DESTRUCTION_HPP
+#ifndef SYSTEMS_ANIMATION_HPP
+#define SYSTEMS_ANIMATION_HPP
 
 #include <entityx/entityx.h>
 #include <box2d/box2d.h>
 
-class DestructionSystem final : public entityx::System<DestructionSystem> {
+class AnimationSystem final : public entityx::System<AnimationSystem> {
 public:
-	DestructionSystem(b2World *world);
+	AnimationSystem(b2World *world);
 	void update(entityx::EntityManager &entities, entityx::EventManager &events, entityx::TimeDelta dt);
 
 private:
