@@ -2,11 +2,11 @@
 #define CORE_GAME_HPP
 
 #include <entityx/entityx.h>
+#include "systems/animation.hpp"
 #include "systems/body.hpp"
 #include "systems/contact.hpp"
-#include "systems/destruction.hpp"
-#include "systems/joint.hpp"
 #include "systems/input.hpp"
+#include "systems/joint.hpp"
 #include "systems/physics.hpp"
 #include "systems/render.hpp"
 #include "systems/score.hpp"
@@ -27,7 +27,7 @@ public:
 		std::shared_ptr<SpeedSystem> speed,
 		std::shared_ptr<ScoreSystem> score,
 		std::shared_ptr<SoundSystem> sound,
-		std::shared_ptr<DestructionSystem> destruction);
+		std::shared_ptr<AnimationSystem> animation);
 	void run();
 
 private:
