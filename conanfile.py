@@ -5,12 +5,12 @@ class SpaceEscape(ConanFile):
 	generators = "cmake"
 
 	def requirements(self):
-		self.requires("sdl/2.26.0")
+		self.requires("sdl/2.28.2")
 		self.requires("sdl_image/2.0.5")
 		self.requires("sdl_mixer/2.0.4")
 		self.requires("entityx/1.3.0")
 		self.requires("box2d/2.4.1")
-		self.requires("fruit/3.6.0")
+		self.requires("fruit/3.7.1")
 
 	def configure(self):
 		self.options["sdl_image"].bmp = False
@@ -45,7 +45,7 @@ class SpaceEscape(ConanFile):
 		if self.settings.os == "Windows" or self.settings.os == "Macos":
 			self.options["sdl_mixer"].nativemidi = False
 
-		self.options["fruit"].use_boost = False
+		self.options["fruit"].with_boost = False
 
 	def generate(self):
 		cmake = CMake(self)
