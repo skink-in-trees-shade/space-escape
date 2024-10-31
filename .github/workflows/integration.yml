@@ -13,26 +13,24 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - { os: ubuntu-latest, cc: gcc }
-          - { os: windows-latest, cc: cl }
-          - { os: macos-latest, cc: clang }
+          - { os: ubuntu-24.04, cc: gcc }
+          - { os: windows-2022, cc: cl }
+          - { os: macos-13, cc: clang }
     env:
       BUILD_TYPE: ${{ github.event_name == 'pull_request' && 'Debug' || 'Release' }}
-      CONAN_V2_MODE: 1
-      CONAN_SYSREQUIRES_MODE: enabled
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         with:
           path: build
           key: ${{ matrix.config.os }}-${{ env.BUILD_TYPE }}-${{ hashFiles('conanfile.py', 'CMakeLists.txt') }}
       - uses: turtlebrowser/get-conan@main
-        with:
-          version: 1.*
-      - run: conan install . -if build -s build_type=${{ env.BUILD_TYPE }} -b missing -c tools.system.package_manager:mode=install -c tools.system.package_manager:sudo=True
-      - run: conan build . -if build
-      - run: tar -cvf space-escape.tar -C build/bin .
-      - uses: actions/upload-artifact@v3
+      - run: conan profile detect
+      - run: conan install . -b missing -c tools.system.package_manager:mode=install -c tools.system.package_manager:sudo=True -s build_type=${{ env.BUILD_TYPE }}
+      - run: conan build . -s build_type=${{ env.BUILD_TYPE }}
+      - run: conan export-pkg . -s build_type=${{ env.BUILD_TYPE }}
+      - run: tar -cvf space-escape.tar -C package .
+      - uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.config.os }}-${{ env.BUILD_TYPE }}
           path: space-escape.tar
